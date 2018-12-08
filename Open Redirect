@@ -1,0 +1,16 @@
+<%
+...
+try {
+  int strDest==Integer.parseInt)request.getParameter("dest"));
+  if((strDest >0&&(strDest<=strURLArray.length -1)){
+    strFinalURL=strURLArray[strDest];
+    pageContext.forward(strFinalURL);
+    }
+  }
+}
+catch(NumberFirnatException nfe){
+  //Handle exception
+ ...
+}
+...
+%>
