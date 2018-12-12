@@ -1,0 +1,48 @@
+密码明文保存于配置文件中，很容易会被攻击者利用导致造成系统敏感信息泄露。 应对配置文件中的密码加密存储。 
+修复示例 ：如
+
+bean id=dataSource  
+class= org.apache.commons.dbcp.BasicDataSource 
+destroy-method=close 
+
+p:driverClassName=oracle.jdbc.driver.OracleDriver 
+p:url=jdbc:oracle:thin:@127.0.0.1:1523:orcl 
+p:username=czw 
+p:password=czw   
+
+修复为： 对于Spring框架项目中，有专门加密配置文件密码的方法如下：
+ 1、将配置文件抽取到property中来： 
+bean class= org.springframework.beans.factory.config.PropertyPlaceholderConfigurer
+
+p:location=classpath:jdbc.properties  
+p:fileEncoding=utf-8  
+  
+bean id=dataSource  
+class= org.apache.commons.dbcp.BasicDataSource 
+destroy-method=close 
+
+p:driverClassName=${driverClassName} 
+p:url=${url} 
+p:username=${userName} 
+p:password=${password}  
+2、扩展PropertyPlaceholderConfigurer父类PropertyResourceConfigurer的解密方法convertProperty： 
+import
+org.springframework.beans.factory.config.PropertyPlaceholderConfigurer; 
+public class ConvertPwdPropertyConfigurer extends PropertyPlaceholderConfigurer{
+@Override
+
+protected String convertProperty(String propertyName, String propertyValue) 
+{
+System.out.println("=================="+propertyName+":"+propertyValue);
+if("userName".equals(propertyName))
+  {
+  return"czw";
+  }
+    if("password".equals(propertyName))
+    {
+    return"czw";
+    }
+    return propertyValue;
+  }
+}
+
