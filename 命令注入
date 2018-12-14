@@ -1,0 +1,113 @@
+命令行注入，用户输入的字符串被直接作为系统命令在命令行执行。
+存储型命令行注入，来自存储设备的字符串被直接作为命令行使用。
+
+修复建议
+使用封装类或白名单枚举限制可被执行的命令，或使用黑名单字符包含枚举限制可被执行的命令。
+命令行注入<b>修复示例</b>
+如：
+<pre>
+	public void risk(HttpServletRequest request ,org.apache.log4j.Logger logger) {
+		String cmd = request.getParameter("cmd");
+		try {
+			Runtime.getRuntime().exec(cmd);
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+修复为：
+<pre>
+public void fix(HttpServletRequest request, 
+List<String> whiteList ,org.apache.log4j.Logger logger) {
+		String cmd = request.getParameter("cmd");
+		try {
+			int index = whiteList.indexOf(cmd);
+			if (index > -1) {
+				Runtime.getRuntime().exec(whiteList.get(index));
+			}
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+或：
+<pre>
+//使用黑名单字符包含枚举方式：
+boolean isBlackComment(String comment) {  
+		blackListStr = “|;&$><`\!”
+		String[] blackListChar = strToArray(blackListStr); 
+		for (String blackChar : blackListChars) {  
+			if (pathMatcher.match(blackChar, comment)) {  
+				return true;  
+			}
+		}
+		return false;  
+	}
+public void fix1(HttpServletRequest request, 
+List<String> whiteList ,org.apache.log4j.Logger logger) {
+		String cmd = request.getParameter("cmd");
+		try {
+			if (!isBlackComment (cmd)) {
+				Runtime.getRuntime().exec(whiteList.get(index));
+			}
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+存储型命令行注入<b>修复示例</b>
+如：
+<pre>
+	public void risk(ResultSet resultSet ,org.apache.log4j.Logger logger) {
+		try {
+			String cmd = resultSet.getString("cmd");
+			Runtime.getRuntime().exec(cmd);
+		} catch (IOException e) {
+			logger.warn(“Exception1”, e);
+		} catch (SQLException e) {
+			logger.warn(“Exception2”, e);
+		}
+	}
+</pre>
+修复为：
+<pre>
+	public void fix(ResultSet resultSet, List<String> whiteList ,org.apache.log4j.Logger logger) {
+		try {
+			String cmd = resultSet.getString("cmd");
+			int index = whiteList.indexOf(cmd);
+			if (index > -1) {
+				Runtime.getRuntime().exec(whiteList.get(index));
+			}
+		} catch (IOException e) {
+			logger.warn(“Exception1”, e);
+		} catch (SQLException e) {
+			logger.warn(“Exception2”, e);
+		}
+	}
+</pre>
+或：
+<pre>
+//使用黑名单字符包含枚举方式：
+boolean isBlackComment(String comment) {  
+		blackListStr = “|;&$><`\!”
+		String[] blackListChar = strToArray(blackListStr);
+		for (String blackChar : blackListChars) {
+			if (pathMatcher.match(blackChar, comment)) {
+				return true;
+			}
+		}
+		return false;
+	}
+public void fix1(ResultSet resultSet, List<String> whiteList ,org.apache.log4j.Logger logger) {
+		try {
+			String cmd = resultSet.getString("cmd");
+			if (!isBlackComment (cmd)) {
+				Runtime.getRuntime().exec(whiteList.get(index));
+			}
+		} catch (IOException e) {
+			logger.warn(“Exception1”, e);
+		} catch (SQLException e) {
+			logger.warn(“Exception2”, e);
+		}
+	}
+</pre>
