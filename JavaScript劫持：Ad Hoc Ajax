@@ -1,0 +1,73 @@
+ 所有使用 JavaScript 进行交流的程序需要采取以下防范措施： 
+— 拒绝恶意请求：— 在每个返回给 JavaScript 的请求中使用一些令人难以猜测的标识符，如会话标识符。允许服务器验证请求的来源可以防范跨站点请求的伪装攻击。 
+— 避免直接执行 JavaScript 响应：包括某些响应中的字符，这些响应只有经过了修改，才能成功地转到 JavaScript 解释器进行处理。这样可以防止攻击者使用  <script type="text/javascript"> 标签看清 JavaScript 的执行过程。
+防范 JavaScript hijacking 的最佳方法是同时采取上述两种防范策略。
+<b>拒绝恶意请求<\/b>
+从服务器的角度来看，JavaScript 劫持攻击类似于跨站点伪装请求，因此，防止跨站点伪装请求也就可以防止 JavaScript 劫持攻击。
+为了便于探测各种恶意请求，每个请求均应包含攻击者难以猜测的参数。一种方法是将会话 cookie 作为参数添加到请求中。服务器接收到这样一个请求时，它可以检查并确定会话 cookie 是否与请求中的参数值匹配。恶意代码无法取得会话 cookie（cookie 也需要遵循同源策略 (Same Origin Policy)），因此，攻击者即使制造了请求，也很难再通过检验了。也可以使用其他机密信息代替会话 cookie。只要这个机密信息难以猜测，可以在合法应用程序能够访问的上下文中使用，同时又无法通过其他的域进行访问，就可以防止攻击者制造有效的请求。
+有一些框架仅能运行在客户端上。换言之，它们完全由 JavaScript 编写而成，对服务器的工作情况一无所知。这意味着它们并不知道会话 cookie 的名称。即使并不清楚会话 cookie 的名称，它们也能参与基于 cookie 的防范，途径就是将所有的 cookie 附加到发送给服务器的各个请求中。 
+<b>例 2：<\/b>以下 JavaScript 片段描述了这种“盲客户端”策略：
+<pre>
+  var httpRequest = new XMLHttpRequest();
+  ...
+  var cookies="cookies="+escape(document.cookie);
+  http_request.open('POST', url, true);
+  httpRequest.send(cookies);
+<\/pre>
+
+服务器也可以检查 HTTP referer 头信息，以确保请求来自于合法的应用程序，而不是恶意的应用程序。从历史上看，referer 头信息一直都未受到过信任，因此，我们并不建议您将它作为安全机制的基础。
+您可以为服务器装入一种针对 JavaScript hijacking 的防范方法，即让服务器只对 HTTP POST 请求做出响应，而不回应任何 HTTP GET 请求。这是一项防御技术，原因是 <script> 标签通常使用 GET 方法从外部资源文件中加载 JavaScript。然而，这种防范措施并非尽善尽美。Web 应用程序的专家一致鼓励采用 GET 方法提高性能。如果在 HTTP 方法的选择上缺乏安全方面的考虑，这意味着未来的某一时刻，程序员可能会误认为这种功能上的不足是疏忽所致，而没有将它作为一种安全预警加以认识，进而修改了应用程序以响应 GET 请求。
+<b>防止直接执行响应<\/b>
+为了使恶意站点无法执行包含 JavaScript 的响应，合法的客户端应用程序可以利用允许执行前对接收的数据进行修改这一权限，而恶意的应用程序则只能使用 <script> 标签执行响应。当服务器序列化某个对象时，该对象应包括一个前缀（也可以是后缀），从而使它无法通过 <script> 标签执行 JavaScript。合法的客户端应用程序可以在运行 JavaScript 前删除这些无关的数据。 
+<b>例 3：<\/b>该方法可以通过多种方式来实现。以下例子演示了两种方式。 
+第一种，服务器可以把以下指令作为消息的前缀：
+<pre>
+while(1);
+<\/pre>
+除非客户端删除这些前缀，否则对这个消息求值将把 JavaScript 解释器发送到一个无限的循环中。客户端搜索并删除如下前缀：
+<pre>
+var object;
+var req = new XMLHttpRequest();
+req.open("GET", "/object.json",true);
+req.onreadystatechange = function () {
+  if (req.readyState == 4) {
+    var txt = req.responseText;
+    if (txt.substr(0,9) == "while(1);") {
+      txt = txt.substring(10);
+    }
+    object = eval("(" + txt + ")");
+    req = null;
+  }
+};
+req.send(null);
+<\/pre>
+
+第二种，服务器可以在 JavaScript 附近加注注释字符，这些注释字符必须在 JavaScript 被送往 eval() 函数前删除。以下 JSON 对象已加入了一块注释： 
+<pre>
+/*
+[{"fname":"Brian", "lname":"Chess", "phone":"6502135600",
+  "purchases":60000.00, "email":"brian@software.com" }
+]
+*/
+<\/pre>
+
+客户端可以搜索并删除如下注释字符：
+<pre>
+var object;
+var req = new XMLHttpRequest();
+req.open("GET", "/object.json",true);
+req.onreadystatechange = function () {
+  if (req.readyState == 4) {
+    var txt = req.responseText;
+    if (txt.substr(0,2) == "/*") {
+      txt = txt.substring(2, txt.length - 2);
+    }
+    object = eval("(" + txt + ")");
+    req = null;
+  }
+};
+req.send(null);
+<\/pre>
+
+任何通过 <script> 标签来提取敏感 JavaScript 的恶意站点都将无法获取其中所包含的数据。
+</script> 
