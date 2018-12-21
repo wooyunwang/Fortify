@@ -1,0 +1,2 @@
+永不应该使用那些无法安全使用的函数。如果这些函数中的任何一个出现在新的或是继承代码中，则必须删除该函数并用相应的安全函数进行取代。 
+对于“说明”部分中介绍的示例 1，更加安全的解决方案是使用更新的 PCRE 函数  preg_match() 和 PCRE 格式的正则表达式代替 POSIX 函数  ereg()。PHP 文档提供从 POSIX 正则表达式函数到其更新（更安全）的 PCRE 替代函数的相应映射，网址为 http://php.net/manual/en/reference.pcre.pattern.posix.php。POSIX 函数  sql_regcase() 是个例外，因为它没有对等的 PCRE 函数，因此应完全避免该函数。  
