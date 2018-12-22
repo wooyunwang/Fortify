@@ -1,0 +1,20 @@
+HTTP GET方法提交密码，传送密码或其他敏感数据可能会引起数据的误用，且有可能会被攻击者获取。
+<b>修复建议</b>
+敏感信息传输使用POST方法请求。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;form method=&quot;get&quot;&gt;
+	Name of new user: &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+	Password for new user: &lt;input type=&quot;password&quot; name=&quot;user_passwd&quot;&gt;
+	&lt;input type=&quot;submit&quot; name=&quot;action&quot; value=&quot;Create User&quot;&gt;
+	&lt;/form&gt;
+</pre>
+修复为：
+<pre>
+	&lt;form method=&quot;post&quot;&gt;
+	Name of new user: &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+	Password for new user: &lt;input type=&quot;password&quot; name=&quot;user_passwd&quot;&gt;
+	&lt;input type=&quot;submit&quot; name=&quot;action&quot; value=&quot;Create User&quot;&gt;
+	&lt;/form&gt;
+</pre>
