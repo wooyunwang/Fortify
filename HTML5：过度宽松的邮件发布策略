@@ -1,0 +1,5 @@
+ 请不要将  * 作为目标源的值。相反，请提供一个特定的目标源。 
+ <b>例 2：</b>以下代码提供了目标源的特定值。 
+ <pre>
+  o.contentWindow.postMessage(message, 'www.trusted.com');
+</pre>  
