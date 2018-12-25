@@ -1,0 +1,26 @@
+HTML密码值填充密码，对HTML表单中的密码字段进行填充会让任何人都能在HTML源中看到它们的值。此外，存储在密码字段中的敏感信息可能会被代理或浏览器缓存。
+<b>修复建议</b>
+在HTML表单中不要设置密码输入的value属性。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;form action=&quot;http://///asdocs/html_tutorials/userpw.asp&quot; method=&quot;post&quot;&gt;
+	&lt;input type=&quot;text&quot; name=&quot;yourname&quot; value = &quot;aaaaa&quot;&gt;&lt;br&gt; 
+
+	&lt;input type=&quot;password&quot; name=&quot;yourpw&quot; value = &quot;7654321&quot;&gt;&lt;br&gt; 
+
+	&lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt; 
+
+	&lt;/form&gt;
+</pre>
+修复为：
+<pre>
+	&lt;form action=&quot;http://///asdocs/html_tutorials/userpw.asp&quot; method=&quot;post&quot;&gt;
+	&lt;input type=&quot;text&quot; name=&quot;yourname&quot; value = &quot;aaaaa&quot;&gt;&lt;br&gt; 
+
+	&lt;input type=&quot;password&quot; name=&quot;yourpw&quot; value = &quot;&quot;&gt;&lt;br&gt; 
+
+	&lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt; 
+
+	&lt;/form&gt;
+</pre>
