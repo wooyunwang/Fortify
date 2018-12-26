@@ -1,0 +1,1 @@
+ 明确定义函数或程序的  AUTHID 子句。如果可能，应避免使用  AUTHID DEFINER。  
