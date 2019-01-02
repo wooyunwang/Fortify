@@ -1,0 +1,22 @@
+隐私侵犯：密码，密码字段在HTML中以明文方式填充会造成密码泄露。
+<b>修复建议</b>
+在HTML表单中，将敏感输入的type属性设置为password。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;form method=&quot;post&quot;&gt;
+	Address:
+	&lt;input name=&quot;address&quot; /&gt;
+	Password:
+	&lt;input autocomplete=&quot;off&quot; name=&quot;password&quot; type=&quot;password&quot; /&gt;
+	&lt;/form&gt;
+</pre>
+修复为：
+<pre>
+	&lt;form method=&quot;post&quot;&gt;
+	Address:
+	&lt;input name=&quot;address&quot; /&gt;
+	Password:
+	&lt;input autocomplete=&quot;off&quot; name=&quot;password&quot; type=&quot;password&quot; /&gt;
+	&lt;/form&gt;
+</pre>
