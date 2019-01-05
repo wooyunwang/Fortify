@@ -1,0 +1,4 @@
+ 确保提交数据流之后为未对其进行其他更改。对数据流执行其他写入操作最多只是操作无效，而执行其他提交操作  
+可能会导致 servlet 抛出  IllegalStateException。如果可能，最好遵守以下准则： 
+1. 执行  forward() 或  sendRedirect 之后立即返回。 
+2. 避免在调用  ServletResponse.getWriter() 或  ServletResponse.getOuputStream() 之后调用  forward() 或  sendRedirect()。  
