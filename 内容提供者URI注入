@@ -1,0 +1,10 @@
+ 阻止注入攻击的最佳做法是采用一些间接手段。例如创建一份合法资源名的列表，并且规定用户只能选择其中的文件名。通过这种方法，用户就不能直接由自己来指定资源的名称了。 
+但在某些情况下，这种方法并不可行，因为这样一份合法资源名的列表过于庞大、难以跟踪。因此，程序员通常在这种情况下采用黑名单的办法。在输入之前，黑名单会有选择地拒绝或避免潜在的危险字符。但是，任何这样一份黑名单都不可能是完整的，而且将随着时间的推移而过时。更好的方法是创建一份白名单，允许其中的字符出现在资源名称中，且只接受完全由这些被认可的字符组成的输入。 
+Android SDK 提供了 URI 构建器，可对用于构建 URI 的参数进行安全编码。 
+ <b>例 2：</b> 对用户控制的数据进行安全编码，以构建内容提供商查询 URI： 
+ <pre>
+// build the URI securely wih user-controlled data (msgId)
+Uri.Builder builder = WeatherContentProvider.CONTENT_URI.buildUpon();
+Uri dataUri2 = builder.appendPath(msgId).build();
+Cursor safeCursor1 = getContentResolver().query(dataUri2, null, null, null, null);
+</pre>  
