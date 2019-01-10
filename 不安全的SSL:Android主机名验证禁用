@@ -1,0 +1,1 @@
+ 当进行 SSL 连接时，不要放弃服务器验证检查。可考虑用  StrictHostnameVerifer 建立服务器身份和安全 SSL 连接。  
