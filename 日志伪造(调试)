@@ -1,0 +1,16 @@
+使用间接方法防止 Log Forging 攻击：创建一组与不同事件一一对应的合法日志条目，这些条目必须记录在日志中，并且仅记录该组条目。要捕获动态内容（如用户注销系统），请务必使用由服务器控制的数值，而非由用户提供的数据。这就确保了日志条目中绝不会直接使用由用户提供的输入。
+
+可以按以下方式将例 1 重写为与 NumberFormatException 对应的预定义日志条目：
+...
+        public static final String NFE = "Failed to parse val. The input is required to be an integer value."
+...
+        String val = request.getParameter("val");         try {                 int value = Integer.parseInt(val);         }         catch (NumberFormatException nfe) {                 log.info(NFE);         }
+..
+
+下面是 Android 的等同内容：
+...
+        public static final String NFE = "Failed to parse val. The input is required to be an integer value."
+...
+        String val = this.getIntent().getExtras().getString("val");         try {                 int value = Integer.parseInt();         }         catch (NumberFormatException nfe) {                 Log.e(TAG, NFE);         }
+...
+在某些情况下，这个方法有些不切实际，因为这样一组合法的日志条目实在太大或是太复杂了。这种情况下，开发者往往又会退而采用黑名单方法。在输入之前，黑名单会有选择地拒绝或避免潜在的危险字符。然而，不安全字符列表很快就会不完善或过时。更好的方法是创建一份白名单，允许其中的字符出现在日志条目中，并且只接受完全由这些经认可的字符组成的输入。在大多数 Log Forging 攻击中，最关键的字符是“\n”（换行符），该字符决不能出现在日志条目白名单中。
