@@ -1,0 +1,16 @@
+验证需要 GPS 位置信息的程序。确定程序请求使用的适当层级，而不要授予对位置的全面访问权。以下示例演示了引用 GPS 位置时可使用的不同粒度层级。
+
+例 2：为进行测试，以下代码会创建模拟位置供应商，而不会访问任何真实的 GPS 信息。
+      <permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+          android:permissionGroup="android.permission-group.LOCATION"
+          android:protectionLevel="dangerous"
+          android:label="@string/permlab_accessMockLocation"
+          android:description="@string/permdesc_accessMockLocation" />
+
+例 3：以下代码使用 WiFi 或 Cell-ID 功能的粗略位置信息，预留精确位置供 GPS 和其他需要此信息的程序使用。
+
+      <permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+          android:permissionGroup="android.permission-group.LOCATION"
+          android:protectionLevel="dangerous"
+          android:label="@string/permlab_accessCoarseLocation"
+          android:description="@string/permdesc_accessCoarseLocation" />
