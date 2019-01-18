@@ -1,0 +1,50 @@
+在配置文件中存储明文密码，很容易会被攻击者利用导致造成系统敏感信息泄露。
+<b>修复建议</b>
+配置文件中的密码加密存储。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;
+	destroy-method=&quot;close&quot;
+	p:driverClassName=&quot;oracle.jdbc.driver.OracleDriver&quot;
+	p:url=&quot;jdbc:oracle:thin:@127.0.0.1:1523:orcl&quot;
+	p:username=&quot;czw&quot;
+	p:password=&quot;czw&quot; /&gt;
+</pre>
+修复为：
+对于Spring框架项目中，有专门加密配置文件密码的方法如下：
+1、将配置文件抽取到property中来： 
+<pre>
+	&lt;bean class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot; 
+	p:location=&quot;classpath:jdbc.properties&quot; 
+	p:fileEncoding=&quot;utf-8&quot; /&gt; 
+	&lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;
+	destroy-method=&quot;close&quot;
+	p:driverClassName=&quot;${driverClassName}&quot;
+	p:url=&quot;${url}&quot;
+	p:username=&quot;${userName}&quot;
+	p:password=&quot;${password}&quot;/&gt;
+</pre>
+2、扩展PropertyPlaceholderConfigurer父类PropertyResourceConfigurer的解密方法convertProperty： 
+<pre>
+	import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer; 
+	public class ConvertPwdPropertyConfigurer extends PropertyPlaceholderConfigurer{
+		@Override
+		protected String convertProperty(String propertyName, String propertyValue) {
+			System.out.println("=================="+propertyName+":"+propertyValue);
+			if("userName".equals(propertyName)){
+				return "czw";
+			}
+			if("password".equals(propertyName)){
+			return "czw";
+			}
+			return propertyValue;
+		} 
+	}
+</pre>
+3、然后将上面完成的类替换配置文件中的PropertyPlaceholderConfigurer：
+<pre>
+	&lt;bean class=&quot;com.cardDemo.commonUtil.ConvertPwdPropertyConfigurer&quot;  
+		p:location=&quot;classpath:jdbc.properties&quot;  
+		p:fileEncoding=&quot;utf-8&quot;/&gt;
+</pre>
