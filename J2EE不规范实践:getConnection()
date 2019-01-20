@@ -1,0 +1,1 @@
+ 应当采用 JNDI 寻找合适的连接代理 (connection factory)，来替代直接调用  DriverManager.getConnection()，并从连接代理中获取连接。  
