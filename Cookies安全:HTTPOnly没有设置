@@ -1,0 +1,1 @@
+ 在创建 cookie 时启用  HttpOnly 属性。这可以通过调用（如果是  javax.servlet.http.Cookie）参数为  true 的  setHttpOnly(boolean) 方法实现。 
