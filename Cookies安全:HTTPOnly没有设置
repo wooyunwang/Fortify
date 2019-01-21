@@ -1,1 +1,7 @@
  在创建 cookie 时启用  HttpOnly 属性。这可以通过调用（如果是  javax.servlet.http.Cookie）参数为  true 的  setHttpOnly(boolean) 方法实现。 
+ <b>示例 2：</b>以下示例中的代码创建的 cookie 与示例 1 中的代码所创建的相同，但这次将  HttpOnly 参数设置为  true。 
+ <pre>
+javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie(&quot;emailCookie&quot;, email);
+cookie.setHttpOnly(true);
+</pre> 
+不要被  HttpOnly 欺骗进入虚假安全。由于已开发出了多种绕过它的机制，因此它并非完全有效。  
