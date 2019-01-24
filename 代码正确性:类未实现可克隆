@@ -1,0 +1,9 @@
+ 应同时实现  Cloneable 接口和  clone() 方法。  
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+public class Kibitzer implements Cloneable {
+  public Object clone() throws CloneNotSupportedException {
+    ...
+  }
+}
+</pre>  
