@@ -1,0 +1,11 @@
+ 在多数情况下，用调用  start() 来取代调用  run()。 
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+    Thread thr = new Thread() {
+      public void run() {
+        ...
+      }
+    };
+
+  thr.start();
+</pre>  
