@@ -1,0 +1,13 @@
+ 如果函数返回错误代码或其他任何有关运行成功或失败的证据，请务必检查错误状况，即便没有任何明显迹象表明会发生这种错误。除了避免安全错误，许多乍看上去难以理解的 bug 最后都会归结为错误的方法调用，并带有 unchecked return value。 
+在您的应用程序中创建一种便于使用的、标准的处理故障方法。如果错误处理过程简单直接，往往不容易被程序员忽略。一种标准化的错误处理方法是，将围绕检查和处理错误状况的常用函数写入封装器，而无需程序员的其他干预。实施并采用封装器后，就可以禁止使用未封装的函数，并利用自定义规则加以执行。  
+ <b>例 3：</b>以下代码对  getParameter() 执行了一个封装方法，用以检查  getParameter() 的返回值是否为  null，并且在所需参数没有定义时是否使用了默认值。  
+ <pre>
+String safeGetParameter (HttpRequest request, String name)
+{
+String value = request.getParameter(name);
+if (value == null) {
+return getDefaultValue(name)
+}
+return value;
+}
+</pre>  
