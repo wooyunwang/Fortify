@@ -1,0 +1,7 @@
+ 为编写可移植代码，不应使用硬编码文件分隔符，而应使用语言库提供的独立于平台的 API。 
+ <b>例 2：</b>下列代码执行与例 1 相同的功能，但使用独立于平台的 API 来指定文件分隔符： 
+ <pre>
+...
+File file = new File(directoryName + File.separator + fileName);
+...
+</pre>  
