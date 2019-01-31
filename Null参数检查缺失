@@ -1,0 +1,10 @@
+ 请遵守以下规定：当方法  Object.equals() 接受一个 null 参数时，必须返回  null。  
+ <b>例 2：</b>前面的示例已经过重写，以明确地检查是否存在 null 参数，如果存在则函数会返回 false。 
+ <pre>
+public boolean equals(Object object)
+{
+   if (object == null)
+  return false;
+   return (toString().equals(object.toString()));
+}
+</pre>  
