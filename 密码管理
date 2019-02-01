@@ -1,0 +1,18 @@
+ 不能采用明文的形式存储密码。相反，应在系统启动时，由管理员输入密码。如果这种方法不切实际，一个安全性较差、但通常都比较恰当的解决办法是将密码模糊化，并把这些去模糊化的资源分散到系统各处，因此，要破译密码，攻击者就必须取得并正确合并多个系统资源。至少，密码要先经过 hash 处理再存储。 
+有些第三方产品宣称可以采用更加安全的方式管理密码。例如，WebSphere Application Server 4.x 用简单的异或加密算法加密数值，但是请不要对诸如此类的加密方式给予完全的信任。WebSphere 以及其他一些应用服务器通常都只提供过期的且相对较弱的加密机制，这对于安全性敏感的环境来说是远远不够的。一般较为安全的解决方法是采用由用户创建的所有者机制，而这似乎也是目前最好的方法。 
+对于 Android 以及其他任何使用 SQLite 数据库的平台来说，SQLCipher 是一个好选择 -- 对 SQLite 数据库的扩展为数据库文件提供了透明的 256 位 AES 加密。因此，凭证可以存储在加密的数据库中。  
+ <b>例 3：</b>以下代码演示了在将所需的二进制码和存储凭证下载到数据库文件后，将 SQLCipher 集成到 Android 应用程序中的方法。  
+ <pre>
+import net.sqlcipher.database.SQLiteDatabase;
+...
+  SQLiteDatabase.loadLibs(this);
+   File dbFile = getDatabasePath(&quot;credentials.db&quot;);
+   dbFile.mkdirs();
+   dbFile.delete();
+   SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, &quot;credentials&quot;, null);
+   db.execSQL(&quot;create table credentials(u, p)&quot;);
+   db.execSQL(&quot;insert into credentials(u, p) values(?, ?)&quot;, new Object[]{username, password});
+...
+</pre> 
+注意，对  android.database.sqlite.SQLiteDatabase 的引用可以使用  net.sqlcipher.database.SQLiteDatabase 代替。 
+要在 WebView 存储上启用加密，需要使用  sqlcipher.so 库重新编译 WebKit。  
