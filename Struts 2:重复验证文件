@@ -1,0 +1,2 @@
+如果这是由于错误命名的验证文件造成，则检查重复的验证定义。请确保每个 Action 都有且只有一个使用 Struts2 应用程序部署的对应 ActionClass-validation.xml 文件。  
+ 确定哪个 validation form 是最新的，将其他的删除。仔细检查保留下来的 validation form，看有没有其他错误或已经过时的迹象。
