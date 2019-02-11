@@ -1,0 +1,34 @@
+ 验证  Object.equals() 的使用确实是您要调用的方法。如果不是，那么可实现  equals() 方法，或者使用其他方法来比较对象。 
+ <b>例 2：</b>以下代码将  equals() 方法添加到“说明”部分中的示例。 
+ <pre>
+public class AccountGroup
+{
+    private int gid;
+
+  public int getGid()
+    {
+      return gid;
+    }
+
+ public void setGid(int newGid)
+ {
+      gid = newGid;
+  }
+
+ public boolean equals(Object o)
+    {
+      if (!(o instanceof AccountGroup))
+          return false;
+      AccountGroup other = (AccountGroup) o;
+     return (gid == other.getGid());
+   }
+}
+...
+public class CompareGroup
+{
+    public static boolean compareGroups(AccountGroup group1, AccountGroup group2)
+  {
+      return group1.equals(group2);
+  }
+}
+</pre>  
