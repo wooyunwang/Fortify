@@ -1,0 +1,1 @@
+ 避免直接在 Web 应用程序中管理线程。而改为采用应用程序容器提供的各种标准，如消息驱动程序节 (message driven beans) 和 EJB 计时器服务 (EJB timer service)。  
