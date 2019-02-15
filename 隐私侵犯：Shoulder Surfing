@@ -1,0 +1,6 @@
+切勿以明文形式显示密码。用点或星号来模糊显示该字段字符，而不是以明文显示。 
+ <b>示例：</b>在 HTML 表单中，将敏感输入的  type 属性设置为  password。 
+ <pre>
+  <input name="password" type="password" />
+</pre> 
+注意， type 属性的默认值为  text，而不是  password。因此，处理敏感输入时请不要忽略该属性。  
