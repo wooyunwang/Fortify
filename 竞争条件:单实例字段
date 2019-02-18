@@ -1,0 +1,43 @@
+竞争条件:单实例字段，Servlet 只有一个实例，并通过使用和重复使用该单个实例来处理需要由不同线程同时处理的多个请求。把用户数据存储在Servlet成员字段中会引发数据访问的race condition。
+<b>修复建议</b>
+定义局部变量存储数据，而不是定义全局变量共享数据。或者使用互斥锁对共享的数据进行排队限制。
+<b>修复示例</b>
+如：
+<pre>
+	public class GuestBook extends HttpServlet {
+		String name;
+		protected void doPost (HttpServletRequest req, HttpServletResponse res) {
+			name = req.getParameter("name");
+			...
+			out.println(name + ", thanks for visiting!");
+		}
+}
+</pre>
+修复为：
+<pre>
+	public class GuestBook extends HttpServlet {
+		protected void doPost (HttpServletRequest req, HttpServletResponse res) {
+			GBRequestHandler handler = new GBRequestHandler();
+			handler.handle(req, res);
+			} }
+	public class GBRequestHandler {
+		String name;
+		public void handle(HttpServletRequest req, HttpServletResponse res) {
+		name = req.getParameter("name");
+		...
+		out.println(name + ", thanks for visiting!");
+	}
+</pre>
+或：
+<pre>
+	public class GuestBook extends HttpServlet {
+		String name;
+		protected void doPost (HttpServletRequest req, HttpServletResponse res) {
+			synchronized(name) {
+			name = req.getParameter("name");
+		}
+		...
+		out.println(name + ", thanks for visiting!");
+		}
+	}
+</pre>
