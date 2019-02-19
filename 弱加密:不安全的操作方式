@@ -1,0 +1,9 @@
+ 加密大于块的数据时，避免使用 ECB 操作模式。CBC 模式更好，因为它不会对相同的明文块生成相同的密文块。然而，CBC 模式效率较低，并且在和 SSL 一起使用时会造成严重风险。[1] 请改用 CCM (Counter with CBC-MAC) 模式，或者如果更注重性能，则使用 GCM（Galois/Counter 模式）模式（如可用）。 
+ <b>示例 2：</b>以下代码将 AES 密码用于 CBC 模式： 
+ <pre>
+...
+SecretKeySpec key = new SecretKeySpec(keyBytes, &quot;AES&quot;);
+ Cipher cipher = Cipher.getInstance(&quot;AES/CBC/PKCS5Padding&quot;, &quot;BC&quot;);
+ cipher.init(Cipher.ENCRYPT_MODE, key);
+...
+</pre>  
