@@ -1,0 +1,14 @@
+ 总体而言，应当永远不要将可能包含非字符数据的字节数组转换为  String 对象，因为这会破坏该代码的功能，且在某些情况下会造成更大的安全问题。事实上，很多情况下都不需要将字节数组转换为字符串，如果基于特定原因可以从二进制数据创建  String 对象，则必须先对其进行编码，使其适合于默认字符集。 
+ <b>示例 2：</b>以下示例使用与示例 1 中不同的 API 变体来防止出现验证问题。 
+ <pre>
+  ...
+  FileInputStream fis = new FileInputStream(myFile);
+  byte[] byteArr = byte[BUFSIZE];
+  ...
+  int count = fis.read(byteArr);
+  ...
+  byte[] fileSHA256 = DigestUtils.sha256(byteArr);
+  // use fileSHA256 to validate file, comparing hash byte-by-byte.
+  ...
+</pre> 
+在这种情况中，可以使用一种直接的方式进行纠正，因为此 API 具有过载的变体，且其中一个变体接受字节数组，即使之后使用  DigestUtils.sha256() 的另一个过载变体（此变体将  FileInputStream 对象接受为其参数），也可对其进行简化。对于其他情况，可能要仔细考虑字节数组是否包含字符集外的数据，并且可能需要进一步的修改。  
