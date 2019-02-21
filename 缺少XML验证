@@ -1,0 +1,31 @@
+ 若创建 XML 解析器或解析器代理，务必启用校验功能。由于用来定义结构的文件规则错综复杂，或是人们完全不了解，而给校验带来了一些问题，那么在其附近有可能潜藏着某些安全漏洞。 
+下面的例子演示了如何启用 Xerces 解析器的校验功能（包括 DOM 和 SAX）： 
+ <pre>
+org.apache.xerces.framework.XMLParser: parser.setValidation(true);
+org.apache.xerces.framework.XMLParser: parser.setValidationSchema(true);
+</pre> 
+接下来的例子演示了如何在 javax 库中为 SAX 和 DOM 解析器代理启用校验功能。 
+javax SAX 解析器代理： 
+ <pre>
+javax.xml.parsers.SAXParserFactory: factory.setValidating(true);
+javax.xml.parsers.SAXParserFactory: factory.setFeature(&quot;http://xml.org/sax/features/validation&quot;, true);
+</pre> 
+javax DOM 解析器代理： 
+ <pre>
+javax.xml.parsers.DocumentBuilderFactory: factory.setValidating(true);
+</pre> 
+接下来的各个例子演示了如何在 javax 库中为单个解析器和 XMLReaders 启用校验功能。  
+注意：HPE Security Fortify 软件安全研究团队不建议采用这种方法启用校验功能。相反，您应在解析器代理中启用校验功能。 
+javax SAX 解析器和读取器： 
+ <pre>
+javax.xml.parsers.SAXParser: parser.setProperty(&quot;http://xml.org/sax/features/validation&quot;, new Boolean(true));
+org.xml.sax.XMLReader: reader.setFeature(&quot;http://xml.org/sax/features/validation&quot;, true);
+</pre> 
+以下示例将显示如何为 Apache Axis 设置 XML 返回类型。  
+Axis 客户端调用： 
+ <pre>
+call.addParameter(&quot;testParam&quot;, org.apache.axis.Constants.XSD_STRING, javax.xml.rpc.ParameterMode.IN);
+call.setReturnType(org.apache.axis.Constants.XSD_STRING);
+String ret = (String) call.invoke( new Object[] { &quot;Hello!&quot;
+ } );
+</pre>  
