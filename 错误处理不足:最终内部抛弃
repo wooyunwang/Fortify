@@ -1,0 +1,50 @@
+ 请勿从  finally 块中抛出异常。如果您必须重新抛出异常，请在  catch 块中执行该操作，这样不会影响到  finally 块的正常执行。 
+ <b>例 2：</b>下列代码会在  catch 块中重新抛出  FileNotFoundException。 
+ <pre>
+public void processTransaction(Connection conn) throws FileNotFoundException
+{
+FileInputStream fis = null;
+Statement stmt = null;
+try
+{
+    stmt = conn.createStatement();
+    fis = new FileInputStream(&quot;badFile.txt&quot;);
+    ...
+}
+catch (FileNotFoundException fe)
+{
+    log(&quot;File not found.&quot;);
+    throw fe;
+}
+catch (SQLException se)
+{
+    //handle error
+}
+finally
+{
+    if (fis == null)
+    {
+        try
+        {
+            fis.close();
+        }
+        catch (IOException ie)
+        {
+            log(ie);
+        }        
+    }
+
+    if (stmt != null)
+    {
+        try
+        {
+            stmt.close();
+        }
+        catch (SQLException e)
+        {
+            log(e);
+        }
+    }
+}
+}
+</pre>  
