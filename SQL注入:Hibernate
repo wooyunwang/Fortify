@@ -1,0 +1,35 @@
+SQL注入，SQL语句中存在用户输入的字符串，且未使用安全的查询方法进行执行SQL语句。
+<b>修复建议</b>
+使用带占位符的预编译执行方式的SQL语句，并且，所有非程序自身的数据都不参与SQL语句的构成。
+<b>修复示例</b>
+如：
+<pre>
+	public void risk(HttpServletRequest request, Connection sess, org.apache.log4j.Logger logger) {
+		try {
+		String userName = request.getParameter("userName ");
+		String itemName = request.getParameter("itemName");
+		String query = "FROM items WHERE owner = '"
+			+ userName + "' AND itemname = '"
+			+ itemName + "'";
+		List items = sess.createQuery(query).list();
+		} catch (SQLException e) {
+			logger.warn(“Exception”, e);
+		}
+}
+</pre>
+修复为：
+<pre>
+	public void fix(HttpServletRequest request, Connection sess, org.apache.log4j.Logger logger) {
+		try {
+		String userName = request.getParameter("userName ");
+		String itemName = request.getParameter("itemName");
+		String query ="FROM items WHERE itemname=? AND owner=?";
+		Query stmt = sess.createQuery(query);
+		stmt.setString(0, itemName);
+		stmt.setString(1, userName);
+		List items = stmt.list();
+		} catch (SQLException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
