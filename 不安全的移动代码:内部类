@@ -1,0 +1,11 @@
+ 避免使用 inner class。若必须使用，请仔细考虑编译器所要执行的转化行为带来的各种影响。是否可以把  private 字段降级为  protected？ 
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+public final class urlTool extends Applet {
+    ...
+}
+
+private final class urlHelper {
+...
+}
+</pre>  
