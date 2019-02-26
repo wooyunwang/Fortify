@@ -1,0 +1,8 @@
+ 应限制将 SQL 查询记录到  debug 级别，并注意不要让应用程序处于生产环境中的调试模式。 
+ <b>例 2：</b>以下条目将使 Hibernate 查询记录在  debug 级别。 
+ <pre>
+...
+log4j.logger.net.sf.hibernate.type=debug
+log4j.logger.net.sf.hibernate.tool.hbm2ddl=debug
+...
+</pre>  
