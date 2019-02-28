@@ -1,0 +1,17 @@
+ 编写错误消息时，始终要牢记安全性。在编码的过程中，尽量避免使用繁复的消息，提倡使用简短的错误消息。限制生成与存储繁复的输出数据将有助于管理员和程序员诊断问题的所在。此外，还要留意有关调试的跟踪信息，有时它可能出现在不明显的位置（例如嵌入在错误页 HTML 代码的注释行中）。 
+即便是并未揭示栈踪迹或数据库转储的简短错误消息，也有可能帮助攻击者发起攻击。例如，“Access Denied”（拒绝访问）消息可以揭示系统中存在一个文件或用户。由于这个原因，它应始终保留信息，而不是将其直接发送到程序外部的资源。 
+ <b>例 4：</b>以下代码仅在您的应用程序中广播所捕获到的异常的堆栈跟踪，以便它不能泄露给系统中的其他应用程序。还有一个额外的好处，这比在系统中全局广播更高效。 
+ <pre>
+...
+try {
+  ...
+} catch (Exception e) {
+    String exception = Log.getStackTraceString(e);
+    Intent i = new Intent();
+    i.setAction(&quot;SEND_EXCEPTION&quot;);
+    i.putExtra(&quot;exception&quot;, exception);
+    LocalBroadcastManager.getInstance(view.getContext()).sendBroadcast(i);
+}
+...
+</pre> 
+如果您担心 Android 设备上的系统数据会通过 NFC 泄露，那么您可以采取以下三种措施之一。不把系统数据包括在发送到范围内其他设备的消息中，或加密消息负载，或在更高层中建立安全通信通道。  
