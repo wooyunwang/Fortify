@@ -1,0 +1,12 @@
+ 在生成对称密钥或密文，或解密现有密文的过程中，实施所有必需步骤。尽可能明确地指定所用参数，以确保不会削弱加密的强度。 
+ <b>例 2：</b> 例 1 中的代码可以按如下所示方式修复： 
+ <pre>
+...
+final String CIPHER_INPUT = &quot;123456ABCDEFG&quot;;
+KeyGenerator keyGenerator = KeyGenerator.getInstance(&quot;AES&quot;);
+keyGenerator.init(256);
+
+SecretKey secretKey = keyGenerator.generateKey();
+byte[] byteKey = secretKey.getEncoded();
+....
+</pre>  
