@@ -1,0 +1,40 @@
+邮件命令行注入，用户输入的字符串被直接作为SMTP邮件服务器的命令在命令行执行。通过执行SMTP命令，攻击者能够指示服务器执行恶意操作，例如发送垃圾邮件。
+<b>修复建议</b>
+使用封装类或白名单枚举限制可被执行的命令，发送邮件时确保外界传入的参数中不包含换行符。
+<b>修复示例</b>
+如：
+<pre>
+//以下代码使用 HTTP 请求参数来构建将发送到 SMTP 服务器的 VRFY命令。攻击者可以利用此参数修改发送到服务器的命令，并使用CRLF字符注入新命令。
+	public void risk(HttpServletRequest request ,org.apache.log4j.Logger logger) {
+		try {
+			String user = request.getParameter("user");
+			SMTPSSLTransport transport = new SMTPSSLTransport(session,new URLName(Utilities.getProperty("smtp.server")));
+			transport.connect(Utilities.getProperty("smtp.server"), username, password);
+			transport.simpleCommand("VRFY " + user);
+			...
+		} catch (IOException e) {
+			logger.warn(“Exception1”, e);
+		} catch (SQLException e) {
+			logger.warn(“Exception2”, e);
+		}
+	}
+</pre>
+修复为：
+<pre>
+	public void risk(HttpServletRequest request ,org.apache.log4j.Logger logger) {
+		try {
+			String user = request.getParameter("user");
+			user = user.replaceAll(“\n”, “”); //替换删除换行符
+			SMTPSSLTransport transport = new SMTPSSLTransport(session,new URLName(Utilities.getProperty("smtp.server")));
+			transport.connect(Utilities.getProperty("smtp.server"), username, password);
+			int index = whiteList.indexOf(user);
+			if (index > -1) {
+				transport.simpleCommand("VRFY " + user);
+			}
+		} catch (IOException e) {
+			logger.warn(“Exception1”, e);
+		} catch (SQLException e) {
+			logger.warn(“Exception2”, e);
+		}
+	}
+</pre>
