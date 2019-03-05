@@ -1,0 +1,7 @@
+ 将足够长度的初始化矢量 (IV) 与适当的随机数据源中的字节结合使用。 
+ <b>例 2：</b> 以下代码使用  SecureRandom 创建了完全随机的 IV： 
+ <pre>
+SecureRandom random = new SecureRandom();
+byte[] iv = random.generateSeed(16);
+IvParameterSpec ips = new IvParameterSpec(iv);
+</pre>  
