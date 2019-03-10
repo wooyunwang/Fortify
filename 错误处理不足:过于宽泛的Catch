@@ -1,0 +1,1 @@
+ 不要捕获范围过大的异常类，比如  Exception、a Throwable、 Error 或 ，除非是级别非常高的程序或线程。  
