@@ -1,0 +1,21 @@
+ 调用类  java.text.Format 中的  parse() 和  format() 时，请使用同步来防止 race condition。 
+ <b>例 2：</b> 以下代码显示了使用同步构造更正例 1 中代码的两种方式。  
+ <pre>
+public class Common {
+
+    private static SimpleDateFormat dateFormat;
+    ...
+
+    public synchronized String format1(Date date) {
+        return dateFormat.format(date);
+    }
+
+    public String format2(Date date) {
+        synchronized(dateFormat)
+        {
+            return dateFormat.format(date);
+        }
+    }
+}
+</pre> 
+此外还可以使用  org.apache.commons.lang.time.FastDateFormat 类，该类是一种对线程安全的  java.text.SimpleDateFormat 版本。  
