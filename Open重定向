@@ -1,0 +1,29 @@
+Open重定向，重定向的URL中存在用户输入的字符串，且未对重定向的目标域名进行校验。
+<b>修复建议</b>
+使用固定重定向的目标 URL、编号指定重定向的目标URL、校验重定向的目标域名三种方法的其中一种即可。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;%
+		...
+		String strDest = request.getParameter(&quot;dest&quot;);
+		pageContext.forward(strDest);
+		...
+	%&gt;
+</pre>
+修复为：
+<pre>
+	&lt;%
+		...
+		try {
+			int strDest = Integer.parseInt(request.getParameter(&quot;dest&quot;));
+			if((strDest &gt;= 0) &amp;&amp; (strDest &lt;= strURLArray.length -1 )){
+				strFinalURL = strURLArray[strDest];
+				pageContext.forward(strFinalURL);
+			}
+		}
+		catch (NumberFormatException nfe) {
+		 ...
+		}
+	%&gt;
+</pre>
