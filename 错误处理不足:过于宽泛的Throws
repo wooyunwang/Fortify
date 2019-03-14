@@ -1,0 +1,1 @@
+ 不要声明抛出  Exception 或  Throwable 异常的方法。如果方法抛出的异常无法恢复，或者通常不能被调用者捕获，那么可以考虑抛出未检查的异常，而不是已检查的异常。这可以通过实现一个继承自  RuntimeException 或 Error 的类来代替  Exception，或者还可以在方法中加入 try/catch 块将已检查的异常转换为未检查异常。  
