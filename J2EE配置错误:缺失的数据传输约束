@@ -1,0 +1,1 @@
+ 在定义授权限制时指定  CONFIDENTIAL 传输保证。一旦决定对应用程序的任意部分的信息流进行加密，就不要允许未经加密的信息流进入该应用程序的其他部分，这样可能允许会话 cookie 或其他敏感信息通过不安全的通道传输。   <b>例 2：</b>以下安全限制指定了  CONFIDENTIAL 传输保证。  <pre>        Storefront        Allow Customers and Employees access to online store front        /store/shop/*        Anyone        anyone        CONFIDENTIAL</pre>  
