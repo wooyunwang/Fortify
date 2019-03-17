@@ -1,0 +1,15 @@
+ 无用方法有可能指出调度代码中的 bug 所在。  
+ <b>例 3：</b>如果类中一个名为  getWitch() 的方法被标记为死方法，同时这个类还包含以下调度方法，那么这可能是由于复制粘帖错误而引起的。“w”应返回  getWitch() 而不是  getMummy()。 
+ <pre>
+public ScaryThing getScaryThing(char st) {
+  switch(st) {
+    case 'm':
+      return getMummy();
+    case 'w':
+      return getMummy();
+    default:
+      return getBlob();
+  }
+}
+</pre> 
+总之，您应该去修改或是删除 dead code。要修复 dead code，请通过公共方法直接或间接执行此 dead code。Dead code 不仅不能实现任何程序功能，还会带来额外的麻烦和维护负担。  
