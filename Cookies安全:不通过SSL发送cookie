@@ -1,0 +1,7 @@
+ 对所有新 cookie 设置  Secure 标记，指示浏览器不要以明文形式发送这些 cookie。可通过调用  setSecure(true) 完成此配置。 
+ <b>例 2：</b> 
+ <pre>
+ Cookie cookie = new Cookie(&quot;emailCookie&quot;, email);
+  cookie.setSecure(true);
+    response.addCookie(cookie);
+</pre>  
