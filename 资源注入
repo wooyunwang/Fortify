@@ -1,0 +1,37 @@
+资源注入，与应用程序资源获取和使用相关的路径中含有用户输入的字符串。
+<b>修复建议</b>
+主要修复策略为对用作资源路径的字符串作白名单控制或与资源加载和使用相关的路径仅由程序控制。
+<b>修复示例</b>
+如：
+<pre>
+	// 与Resource相关函数均涉及此漏洞
+	public InputStream risk(HttpServletRequest request) {
+		String path = request.getParameter("path");
+		HttpSession session = request.getSession();
+		ServletContext context = session.getServletContext();
+		return context.getResourceAsStream(path);
+	}
+</pre>
+修复为：
+<pre>
+	public InputStream fix(HttpServletRequest request, Properties properties) {
+		String path = properties.getProperty("path");
+		HttpSession session = request.getSession();
+		ServletContext context = session.getServletContext();
+		return context.getResourceAsStream(path);
+	}
+</pre>
+或：
+<pre>
+	public InputStream fix1(HttpServletRequest request, List<String> whiteList) {
+		String path = request.getParameter("path");
+		HttpSession session = request.getSession();
+		ServletContext context = session.getServletContext();
+			int index = whiteList.indexOf(path);
+			if (index > -1) {
+				return context.getResourceAsStream(path);
+			}else{
+				return null; 
+}
+	}
+</pre>
