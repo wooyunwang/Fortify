@@ -1,0 +1,43 @@
+动态代码注入，程序在运行时中使用解析前端用户控制的指令，会让攻击者有机会执行恶意代码。
+<b>修复建议</b>
+使用封装类或白名单枚举限制可被执行的代码，避免eval或与eval相当的功能的参数中包含外界传入的参数。
+<b>修复示例</b>
+如：
+<pre>
+//此应用程序可以实施一个基本的计算器，该计算器允许用户指定执行命令。
+//如果operation参数的值为良性值，程序就可以正常运行。例如，当该值为"8 + 7 * 2"时，calcResult 变量被赋予的值将为22。如果底层语言提供了访问系统资源的途径或允许执行系统命令，这种攻击甚至会导致系统命令执行。对于JavaScript，攻击者还可以利用这种漏洞进行cross-site scripting攻击。
+	&lt;script type=&quot;text/javascript&quot;&gt; 
+		...
+		userOp = form.operation.value;  
+		calcResult = eval(userOp);
+	…
+	&lt;/script&gt;
+</pre>
+修复为：
+	使用正则表达式对传入的代码参数进行约束，限制外界传入 eval 的参数中只包含字母和数字。
+<pre>
+	&lt;script type=&quot;text/javascript&quot;&gt;
+	//origin是原始输入参数，allowedOrigin是过滤方式
+		function isOriginAllowed(origin, allowedOrigin) {
+			if (_.isArray(allowedOrigin)) {
+				for(let i = 0; i &lt; allowedOrigin.length; i++) {//以白名单数组过滤 
+					if(isOriginAllowed(origin, allowedOrigin[i])) {
+						return true;
+					}
+				}
+			}
+			return false;
+			} else if (_.isString(allowedOrigin)) {//以字符串白名单过滤
+				return origin =allowedOrigin;
+			} else if (allowedOrigin instanceof RegExp) {//以正则表达式方法过滤
+				return allowedOrigin.test(origin);
+			} else {
+				return !!allowedOrigin;
+			}
+		}
+		userOp = form.operation.value;  
+		if(isOriginAllowed(userOp, ALLOW_ORIGIN)) {
+			calcResult = eval(userOp);
+		}
+	&lt;/script&gt; 
+</pre>
