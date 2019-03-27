@@ -1,0 +1,24 @@
+ <pre>
+  FileInputStream fis;
+  byte[] byteArray = new byte[1024];
+  for (Iterator i=users.iterator();
+ i.hasNext();) {
+    String userName = (String) i.next();
+    String pFileName = PFILE_ROOT + &quot;/&quot;
+ + userName;
+    fis = new FileInputStream(pFileName);
+    int bRead = 0;
+    while (bRead &lt;
+ 1024) {
+        int rd = fis.read(byteArray, bRead, 1024 - bRead);
+        if (rd == -1) {
+          throw new IOException(&quot;file is unusually small&quot;);
+        }
+        bRead += rd;
+    }
+    // could add check to see if file is too large here
+    fis.close();
+    processPFile(userName, byteArray);
+  }
+</pre> 
+注：因为该问题的修复相当地复杂，您可能试图使用一个更简单的方法，例如在开始阅读前检查文件的大小。这种方法将导致应用程序容易受到文件系统 race condition 的攻击，凭借这个攻击者可以在文件大小检查和从文件调用读取数据之间使用恶意文件替换结构良好的文件。  
