@@ -1,0 +1,12 @@
+ Struts 2.3.1.1 之后，引入了一种新的配置属性禁用“动态方法调用”功能。为了禁用此功能，请使用“struts.enable.DynamicMethodInvocation”属性作为 Struts 2 属性设置： 
+ <pre>
+</pre> 
+或在 struts.properties 中： 
+ <pre>
+  struts.enable.DynamicMethodInvocation = false
+</pre> 
+或在 web.xml 的 Struts 2 过滤器中包含此参数节点： 
+ <pre>
+    struts.enable.DynamicMethodInvocation
+    false
+</pre>  
