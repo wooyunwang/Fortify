@@ -1,0 +1,23 @@
+ 最低限度下，确保 RSA 密钥长度不少于 2048 位。未来几年需要较强加密的应用程序的密码长度应至少为 4096 位。 
+如果使用 RSA 算法，请确保特定密钥的长度至少为 2048 位。 
+ <b>例 2：</b> 以下代码可生成 2048 位 RSA 加密密钥。 
+ <pre>
+  public static KeyPair getGoodRSAKey() throws NoSuchAlgorithmException {
+    KeyPairGenerator keyGen = KeyPairGenerator.getInstance(&quot;RSA&quot;);
+    keyGen.initialize(2048);
+
+    KeyPair key = keyGen.generateKeyPair();
+     return key;
+   }
+</pre> 
+同样，如果使用对称加密，请确保特定密钥的长度至少为 128 位（适用于 AES）和 168 位（适用于 Triple DES）。 
+ <b>例 3：</b> 以下代码可生成 128 位 AES 加密密钥。 
+ <pre>
+  public static SecretKey getGoodAESKey() throws NoSuchAlgorithmException {
+    KeyGenerator keyGen = KeyGenerator.getInstance(&quot;AES&quot;);
+    keyGen.init(128);
+
+    SecretKey key = keyGen.generateKey();
+     return key;
+   }
+</pre>  
