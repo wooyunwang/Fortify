@@ -1,0 +1,1 @@
+ 如果父方法为  synchronized，则必须将该方法声明为  synchronized。  
