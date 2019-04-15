@@ -1,0 +1,17 @@
+克隆对象的函数不应调用可覆盖的函数，无论是通过将函数指定为  final，还是将类指定为  final 的方式。或者，如果此代码仅在  clone() 函数中需要，则可使用访问说明符  private，或直接将逻辑放入  clone() 方法中。 
+ 示例 2：以下示例可防止对  doSomething() 方法进行覆盖。 
+  ...
+  class User implements Cloneable {
+    private String username;
+    private boolean valid;
+    public Object clone() throws CloneNotSupportedException {
+      final User clone = (User) super.clone();
+      clone.doSomething();
+      return clone;
+    }
+    public final void doSomething(){
+      ...
+    }
+  }
+在以上代码中，已将  doSomething 设置为  final，以便其不会由子类所覆盖。 
+ 
