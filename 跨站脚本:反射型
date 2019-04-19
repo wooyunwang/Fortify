@@ -1,0 +1,102 @@
+反射型跨站，来自用户输入的字符串被直接输出到客户端。
+<b>修复建议</b>
+1、使用跨站修复函数处理输出到客户端的数据字符串。
+2、设置cookie时使用HttpOnly参数，限制cookie作为DOM对象存取，避免攻击者利用跨站脚本漏洞进行Cookie劫持攻击。
+<b>修复示例</b>
+如：
+<pre>
+	public void risk(HttpServletRequest request, 
+HttpServletResponse response ,org.apache.log4j.Logger logger) {
+		String text = request.getParameter("text");
+		try {
+			response.getWriter().print(text);
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+修复为：
+<pre>
+//使用struts自带的跨站修复函数方式：
+	public void fix(HttpServletRequest request, 
+HttpServletResponse response ,org.apache.log4j.Logger logger) {
+		String text = request.getParameter("text");
+		try {
+			String filtedText = org.apache.struts.util.ResponseUtils.filter(text);
+			response.getWriter().print(filtedText);
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+或：
+<pre>
+//未使用struts的系统，使用自定义的跨站修复函数方式：
+	public void fix2(HttpServletRequest request,
+ HttpServletResponse response ,org.apache.log4j.Logger logger) {
+		String text = request.getParameter("text");
+		try {
+			String encodeText = encodeHtml(text);
+			response.getWriter().print(encodeText);
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+	public String encodeHtml(String input) {
+		if (input == null) {
+			return null;
+		}
+		StringBuffer out = new StringBuffer();
+		for (int i = 0; i &lt; input.length(); i++) {
+			char c = input.charAt(i);
+			if (c == &#x27;&lt;&#x27;) {
+				out.append(&quot;&amp;lt;&quot;);
+			} else if (c == &#x27;&gt;&#x27;) {
+				out.append(&quot;&amp;gt;&quot;);
+			} else if (c == &#x27;\&quot;&#x27;) {
+				out.append(&quot;&amp;quot;&quot;);
+			} else if (c == &#x27;&amp;&#x27;) {
+				out.append(&quot;&amp;amp;&quot;);
+			} else if (c &gt; 0x20 &amp;&amp; c &lt; 0x126) {
+				out.append(c);
+			} else {
+				out.append(&quot;&amp;#&quot; + (int) c + &quot;;&quot;);
+			}
+		}
+		return out.toString();
+	}
+</pre>
+或：
+<pre>
+//使用Apache的commons-lang.jar提供系统库函数StringEscapeUtils.escapeHtml(str)：
+public void fix3(HttpServletRequest request,
+ HttpServletResponse response ,org.apache.log4j.Logger logger) {
+		String text = request.getParameter("text");
+		try {
+			String encodeText = StringEscapeUtils.escapeHtml(text);
+			response.getWriter().print(encodeText);
+		} catch (IOException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+辅助对策：
+<pre>
+//在Java EE中，给Cookie添加HttpOnly的代码如下：
+public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {  
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			Cookie cookie = cookies[0];
+			if (cookie != null) {  
+				cookie.setSecure(true);
+				String value = cookie.getValue();
+				StringBuilder builder = new StringBuilder();
+				builder.append("JSESSIONID=" + value + "; ");
+				builder.append("Secure; ");
+				builder.append("HttpOnly; ");
+				response.setHeader("Set-Cookie", builder.toString());
+			}
+		}
+		chain.doFilter(req, resp);  
+	}
+</pre>
