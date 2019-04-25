@@ -1,0 +1,17 @@
+ 所有顶级 Servlet 方法都应捕获  Throwable，从而尽可能降低调用 Servlet 错误响应机制的可能性。  
+ <b>例 3：</b>例 1 中的代码可以按以下方式进行重写： 
+ <pre>
+protected void doPost (HttpServletRequest req,                
+                    HttpServletResponse res) {
+      try {
+          String ip = req.getRemoteAddr();
+          InetAddress addr = InetAddress.getByName(ip);
+      ...
+          out.println(&quot;hello &quot;
+ + addr.getHostName());
+      }catch (Throwable t) {
+          logger.error(&quot;caught throwable at top level&quot;, t);
+      }
+  }
+}
+</pre>  
