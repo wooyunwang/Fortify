@@ -1,0 +1,8 @@
+ 在 Java 5 [1] 中引入了多种  Array.toString() 方法。这些方法将以逗号分隔的格式返回数组内容的字符串形式。 
+ <b>例 2：</b> 
+ <pre>
+String[] strList = new String[5];
+...
+System.out.println(Arrays.toString(strList));
+</pre> 
+如果您使用的 Java 的版本较旧，那么可能需要迭代通过数组以获得每个元素的值。  
