@@ -1,0 +1,9 @@
+ 务必使用等类比较来识别对象的类型。不要依靠类名来传达类型信息。  
+例 2：以下代码已被重写，以便采用等类比较确定  inputReader 对象是否存在要求的类型。  
+ <pre>
+if (inputReader.getClass() == TrustedClass)
+{
+   input = inputReader.getInput();
+   ...
+}
+</pre>  
