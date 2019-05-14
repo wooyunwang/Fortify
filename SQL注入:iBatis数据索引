@@ -1,0 +1,16 @@
+iBatis Data Map类型SQL注入，iBatis Data Map配置文件中的SQL语句中存在用户输入的字符串，且使用$字符将变量直接连接到SQL指令，而未使用安全的符号“#”进行参数化查询。
+<b>修复建议</b>
+使用带“#”占位符的预编译执行方式的SQL语句，并且，所有非程序自身的数据都不参与SQL语句的构成。
+<b>修复示例</b>
+如：
+<pre>
+	&lt;select id=&quot;getItems&quot; parameterClass=&quot;MyClass&quot; resultClass=&quot;items&quot;&gt;
+		SELECT * FROM items WHERE owner = $userName$ AND itemname = &#x27;$itemName$&#x27;
+	&lt;/select&gt;&quot;
+</pre>
+修复为：
+<pre>
+	&lt;select id=&quot;getItems&quot; parameterClass=&quot;MyClass&quot; resultClass=&quot;items&quot;&gt;
+		SELECT * FROM items WHERE owner = #userName# AND itemname = &#x27;#itemName#&#x27;
+	&lt;/select&gt;&quot;
+</pre>
