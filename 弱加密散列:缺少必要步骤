@@ -1,0 +1,9 @@
+ 在生成加密散列过程中实施所有必需步骤。尽可能明确地指定所用参数，以确保不会削弱散列的强度。 
+ <b>例 2：</b> 例 1 中的代码可按如下所示方式修复： 
+ <pre>
+...
+MessageDigest messageDigest = MessageDigest.getInstance(&quot;SHA-512&quot;);
+messageDigest.update(hashInput.getBytes(&quot;UTF-8&quot;));
+io.writeLine(MyUtilClass.bytesToHex(messageDigest.digest()));
+....
+</pre>  
