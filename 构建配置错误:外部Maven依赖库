@@ -1,0 +1,21 @@
+ 最简单的解决方法是完全避免采用自动化 dependency 管理系统。手动管理 dependency 排除了由 build system 引起意外行为这一潜在危害。很显然，攻击者仍然能针对 dependency 手动检索发动上述攻击之一，但限制 dependency 的检索频率会大大减小攻击者的攻击机会。最终，这个解决方法会致使开发组织依赖于一个看起来陈旧的 build system。基于手动 dependency 管理的系统通常更难以使用和维护，并且在一些软件开发环境中可能不被接受。  
+第二种解决方法综合了传统的手动 dependency 管理方法和全自动化解决方法，这是现在流行的一种做法。手动编译过程的最大优势是减小了攻击机会，它可以通过从内部复制外部 dependency 服务器来实现一个半自动化系统。这样，任何需要利用外部 dependency 的 build system 都能用硬编码的内部 IP 地址来指向内部服务器，以此避开基于 DNS 的攻击风险。如果添加了新的 dependency 并发布了新的版本，可以一次性下载它们，并将其包含在内部存储库中。这一解决方法减小了攻击机会，并且使组织能够充分利用现有的内部网络安全基础架构。 
+要通过 Maven 实施这一解决方法，项目应该在 pom.xml 中对一个内部存储库的 IP 地址进行硬编码。在 pom.xml 中明确指定 IP 地址可确保编译使用其相应的内部存储库，内部存储库与具体的项目相关联。或者，也可以在 settings.xml 中指定 IP 地址，这样使得多个项目更容易共享配置。  
+ <b>例 2：</b>以下 Maven pom.xml 演示了显式内部 IP 地址的用法（这些条目也可以用在 settings.xml 中）：  
+ <pre>
+
+  ...
+        true
+        always
+        warn
+        true
+        never
+        fail
+      central
+      Internal Repository
+      http://172.16.1.13/maven2
+      default
+    ...
+  ...
+
+</pre>  
