@@ -1,0 +1,7 @@
+ 采用  equals() 方法比较字符串。  
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+  if (STRING_CONSTANT.equals(args[0])) {
+      logger.info(&quot;could happen&quot;);
+  }
+</pre>  
