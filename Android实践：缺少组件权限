@@ -1,0 +1,10 @@
+ 没有明确的访问权限的组件应该为异常。除非该组件确实需要被所有应用程序访问，否则开发人员应该通过在显式文件中明确定义访问权限来保护组件，以免其被恶意应用程序滥用。 
+  <b>例 2：</b>下面是使用明确分配的访问权限重写的上文中活动组件的声明。 
+ <pre> 
+<activity android:name=".AndroidActivity" android:permission="FriendsOnly"/> 
+   <intent-filter android:label="activityName"/> 
+    <action android:name=".someFunAction"/> 
+   </intent-filter> 
+   ... 
+ </activity> 
+</pre> 
