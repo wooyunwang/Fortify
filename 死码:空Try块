@@ -1,0 +1,10 @@
+ 如果 try 块没有用处，请将其删除。否则，请确定其缺少哪些应用程序逻辑并使用适当的代码完成该 try 块。 
+ <b>例 2：</b>下列代码包含例 1 中省略的缺失代码。 
+ <pre>
+try {
+rs = stmt.executeQuery(query);
+}
+catch(SQLException e) {
+log(e);
+}
+</pre>  
