@@ -1,0 +1,4 @@
+ 请不要使用  * 作为  Access-Control-Allow-Origin 头文件的值。而应该提供可信赖的域的显式列表。 
+ <b>例 2：</b>下面的  Access-Control-Allow-Origin 头文件指定了一个明确的信赖域。 
+ <pre>
+</pre>  
