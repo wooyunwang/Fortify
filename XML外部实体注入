@@ -1,0 +1,29 @@
+ 应对 XML 解析器进行安全配置，使它不允许将外部实体包含在传入的 XML 文档中。 
+为了避免 XXE injections，应为 XML 代理、解析器或读取器设置下面的属性： 
+ <pre>
+factory.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);
+factory.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);
+</pre> 
+如果不需要 inline DOCTYPE 声明，可使用以下属性将其完全禁用： 
+ <pre>
+factory.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);
+</pre> 
+要保护 TransformerFactory，应设置下列属性： 
+ <pre>
+  TransformerFactory transFact = TransformerFactory.newInstance();
+  transFact.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, &quot;&quot;);
+  Transformer trans = transFact.newTransformer(xsltSource);
+  trans.transform(xmlSource, result);
+</pre> 
+或者，也可以使用安全配置的 XMLReader 来设置转换源： 
+ <pre>
+  XMLReader reader = XMLReaderFactory.createXMLReader();
+  reader.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);
+  reader.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);
+  Source xmlSource = new SAXSource(reader, new InputSource(new FileInputStream(xmlFile)));
+  Source xsltSource = new SAXSource(reader, new InputSource(new FileInputStream(xsltFile)));
+  Result result = new StreamResult(System.out);
+  TransformerFactory transFact = TransformerFactory.newInstance();
+  Transformer trans = transFact.newTransformer(xsltSource);
+  trans.transform(xmlSource, result);
+</pre>  
