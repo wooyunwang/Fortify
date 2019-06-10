@@ -1,0 +1,10 @@
+ 其实同步所花费的代价比想象中的要少。许多情况下，最好的方法就是采用最简单的解决方法。  
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+synchronized (this) {
+  if (fitz == null) {
+    fitz = new Fitzer();
+  }
+  return fitz;
+}
+</pre>  
