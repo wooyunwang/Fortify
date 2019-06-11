@@ -1,0 +1,8 @@
+ 使用 JSP 注释来代替 HTML 注释（JSP 注释不会传递给用户）。 
+ <b>例 2：</b>前面的示例已重写为使用 JSP 注释，该注释不会显示给用户。 
+ <pre>
+...  
+&lt;form action=&quot;recalcOrbit&quot; method=&quot;POST&quot;&gt;   
+...  
+ </form> 
+</pre> 
