@@ -1,0 +1,9 @@
+ 应在业务和数据访问层进行 access control。任何情况下都不允许用户在没有取得相应权限的情况下获取或修改数据库中的记录。每个访问数据库的查询都必须遵守此策略，这可以通过把当前获得授权的用户名包括在查询语句内来实现。 
+ <b>例 2：</b>以下代码实施了与例 1 相同的功能，但是附加了一个限制，即要求当前获得授权的用户必须具有访问特定清单的权限。 
+  <pre>
+  ...
+  id = this.getIntent().getExtras().getInt(&quot;id&quot;);
+  user = getCurrentAuthenticatedUser();
+  cursor = db.query(Uri.parse(invoices), columns, &quot;id = ? AND user = ?&quot;, {id, user}, null, null, null);
+  ...
+ </pre>  
