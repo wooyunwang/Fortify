@@ -1,0 +1,5 @@
+ 为对应的 Action（操作）定义 Struts Validator。以下示例说明了一种典型的“ActionClass-validation.xml”设置： 
+ <pre>
+...
+</pre> 
+配置文件  ActionClass-validation.xml 包含了对验证函数（称为验证器）的定义。  
