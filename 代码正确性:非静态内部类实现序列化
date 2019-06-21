@@ -1,0 +1,23 @@
+ 在使用内部类时，不应对其进行序列化，否则它们将变为静态嵌套类，由此就不会出现对非静态内部类执行序列化时会出现的问题。如果嵌套类为静态类型，则其本质上与实例变量并无关联（包括外部类的实例变量），并且不会导致对外部类执行序列化。 
+ <b>示例 2：</b>以下代码通过阻止内部类实施  java.io.Serializable 更改了示例 1 中的示例。 
+ <pre>
+  ...
+  class User implements Serializable {
+    private int accessLevel;
+    class Registrator {
+      ...
+    }
+  }
+
+</pre> 
+ <b>示例 2：</b>以下代码通过将内部类转变为静态嵌套类更改了示例 1 中的示例。 
+ <pre>
+  ...
+  class User implements Serializable {
+    private int accessLevel;
+    static class Registrator implements Serializable {
+      ...
+    }
+  }
+
+</pre>  
