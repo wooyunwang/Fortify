@@ -1,0 +1,22 @@
+ XStream 间接阻止攻击者对已知错误类（例如  java.beans.EventHandler）进行反序列化，并进而使用反序列化运行任意命令。此外，从 XStream 1.4.7 开始，可以定义类型权限。这些权限用于直接允许或拒绝要进行反序列化的类型，因此无法将非预期的类型注入对象图。对外部源数据进行反序列化的任何应用程序都应该使用此功能，以限制执行任意命令的危险性。由于许多类可用于执行远程代码并绕过黑名单，因此请始终使用白名单方法（允许的类型）。 
+ <b>示例 3：</b>以下 Java 代码显示了  XStream 通过定义允许的类型安全处理不可信赖输入的实例。 
+ <pre>
+XStream xstream = new XStream();
+// clear out existing permissions and set own ones
+xstream.addPermission(NoPermissionType.NONE);
+// allow some basics
+xstream.addPermission(NullPermission.NULL);
+xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+xstream.allowTypeHierarchy(Collection.class);
+// allow any type from the same package
+xstream.allowTypesByWildcard(new String[] {
+    Contact.class.getPackage().getName()+&quot;.*&quot;
+});
+String body = IOUtils.toString(request.getInputStream(), &quot;UTF-8&quot;);
+Contact expl = (Contact) xstream.fromXML(body);
+</pre> 
+注意，应审计白名单中允许的任何类，以确保对其进行反序列化是安全的。 
+如果使用 XStream 作为 Spring 项目的封送解决方案，请使用“converters”属性设置自定义转换器链，该链从  org.springframework.oxm.xstream.CatchAllConverter 转换器开始，如以下示例所示： 
+ <pre>
+                org.company.converters.Contact
+</pre>  
