@@ -1,0 +1,38 @@
+ 请勿将以后要使用的受信敏感信息或数据写入外部存储中。而应将其写入程序特定的位置，例如 SQLite 数据库（由 Android 平台提供）。程序内的任意类都可以按名称访问您所创建的任意数据库，而程序外的类则不能。 
+ <b>例 2.</b>通过创建  SQLiteOpenHelper 的子类和替代  OnCreate() 方法来创建一个新的 SQLite 数据库。 
+ <pre>
+    public class MyDbOpenHelper extends SQLiteOpenHelper {
+
+    private static final int DATABASE_VERSION = 2;
+    private static final String DICTIONARY_TABLE_NAME = &quot;dictionary&quot;;
+    private static final String DICTIONARY_TABLE_CREATE =
+                &quot;CREATE TABLE &quot;
+ + DICTIONARY_TABLE_NAME + &quot;
+ (&quot;
+ +
+                KEY_WORD + &quot;
+ TEXT, &quot;
+ +
+                KEY_DEFINITION + &quot;
+ TEXT);&quot;;
+
+    DictionaryOpenHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(DICTIONARY_TABLE_CREATE);
+    }
+}
+</pre> 
+另一种选择则是写入该设备的内部存储中。默认情况下，保存到内部存储中的文件为该程序专用的，其他程序和用户无法直接访问。用户卸载程序时，保存在内部存储中的文件也会随之删除，保证不会留下任何重要的信息。 
+ <b>例 3：</b>以下代码创建了一个专用文件并将其写入设备的内部存储中。此  Context.MODE_PRIVATE 声明会创建一个文件（或是替换同名文件），并将其设定为当前程序的专用文件。 
+ <pre>
+String FILENAME = &quot;hello_file&quot;;
+String string = &quot;hello world!&quot;;
+
+FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+fos.write(string.getBytes());
+fos.close();
+</pre>  
