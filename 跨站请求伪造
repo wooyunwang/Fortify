@@ -1,0 +1,16 @@
+ 使用会话 cookie 的应用程序必须在每个表单发布中包含几条信息，以便后端代码可以用来验证请求的来源。其中一种方法是包含随机请求标识符或 nonce，如下所示： 
+ <pre>
+  RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, &quot;/new_user&quot;);
+  body = addToPost(body, new_username);
+  body = addToPost(body, new_passwd);
+  body = addToPost(body, request_id);
+  rb.sendRequest(body, new NewAccountCallback(callback));
+</pre> 
+这样，后端逻辑可先验证请求标识符，然后再处理其他表单数据。如果可能，每个服务器请求的请求标识符都应该是唯一的，而不是在特定会话的各个请求之间共享。对于会话标识符而言，攻击者越难猜出请求标识符，则越难成功进行 CSRF 攻击。标记不应能够轻松猜出，它应以保护会话标记相同的方法得到保护，例如使用 SSLv3。 
+其他缓解技术还包括： 
+ <b>框架保护：</b>大多数现代化的 Web 应用框架都嵌入了 CSRF 保护，它们将自动包含并验证 CSRF 标记。 
+ <b>使用质询-响应控制：</b>强制客户响应由服务器发送的质询是应对 CSRF 的强有力防御方法。可以用于此目的的一些质询如下：CAPTCHA、密码重新身份认证和一次性标记。 
+ <b>检查 HTTP Referer/原始标题：</b>攻击者在执行 CSRF 攻击时无法冒仿这些标题。这使这些标题可以用于预防 CSRF 攻击。 
+ <b>再次提交会话 Cookie：</b>除了实际的会话 ID Cookie 外，将会话 ID Cookie 作为隐藏表单值发送是预防 CSRF 攻击的有效防护方法。服务器在处理其余表单数据之前，会先检查这些值，以确保它们完全相同。如果攻击者代表用户提交表单，他将无法根据同源策略修改会话 ID Cookie 值。 
+ <b>限制会话的有效期：</b>当通过 CSRF 攻击访问受保护的资源时，只有当作为攻击一部分发送的会话 ID 在服务器上仍然有效时，攻击才会生效。限制会话的有效期将降低攻击成功的可能性。 
+这里所描述的技术可以使用 XSS 攻击破解。有效的 CSRF 缓解包括 XSS 缓解技术。  
