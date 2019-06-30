@@ -1,0 +1,13 @@
+ 在比较浮点值时，应使用如  java.lang.Double.compare() 等比较函数。同样地，由于确保精度至关重要，为了避免丢失精度，最好还是使用  java.math.BigDecimal。 
+ <b>示例 2：</b>以下示例通过使用  java.math.BigDecimal.compareTo 修复了示例 1 的问题 
+ <pre>
+  ...
+  int initialNum = 1;
+  ...
+  BigDecimal result = new BigDecimal(Double.valueOf(initialNum/10000.0).toString());
+  if (result.compareTo(new BigDecimal(&quot;0.0001&quot;)) == 0){
+    //do something
+  }
+  ...
+</pre> 
+以上情况使用了  BigDecimal.compareTo()，与  BigDecimal.equals() 不同的是，它将两个值视为相同，即使值的小数位数并不相同也是如此。  
