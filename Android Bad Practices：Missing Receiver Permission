@@ -1,0 +1,7 @@
+ 最好在发送广播时明确指定接收者权限。这样可以限制仅为具有所需权限的接收者显示广播数据。此外，还应该详细审查广播消息中包含的数据。 
+ <b>例 2：</b>以下代码会发送广播并明确指定所需的接收者权限。 
+ <pre>
+...
+context.sendBroadcast(intent, &quot;permission.ALLOW_INCOMING&quot;);
+...
+</pre>  
