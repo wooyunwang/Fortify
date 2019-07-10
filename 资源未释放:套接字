@@ -1,0 +1,28 @@
+ 在  finally 代码段中释放套接字资源。例 2 中的代码可按以下方式改写： 
+ <pre>
+private void echoSocket(String host, int port) throws UnknownHostException, SocketException, IOException
+{
+  Socket sock;
+  BufferedReader reader;
+
+  try {
+     sock = new Socket(host, port);
+     reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+
+    while ((String socketData = reader.readLine()) != null) {
+         System.out.println(socketData);
+     }   }   finally {
+     safeClose(sock);
+   } }
+
+public static void safeClose(Socket s) {
+   if (s != null &amp;&amp;
+ !s.isClosed()) {
+     try {
+       s.close();
+     } catch (IOException e) {
+       log(e);
+     }   } }
+</pre> 
+此解决方法使用了一个助手函数，用以记录在尝试关闭套接字时可能产生的异常。该助手函数大约会在需要关闭套接字时重新使用。 
+另外， echoSocket() 方法不会将  sock 套接字对象初始化为 null。而是进行检查，以确保调用  safeClose() 之前， sock 不是  null。如果没有检查  null，Java 编译器会报告  sock 可能没有进行初始化。编译器做出这一判断源于 Java 可以检测未初始化的变量。如果用一种更加复杂的方法将  sock 初始化为  null，那么编译器就无法检测  sock 未经初始化便使用的情况。  
