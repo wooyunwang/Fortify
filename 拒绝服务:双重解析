@@ -1,0 +1,2 @@
+ 如果可能，请应用由 Oracle 发布的修补程序。尽可能为类似 Apache Tomcat 的易受攻击的其他产品安装修补程序。如果不可能，请务必将您的 HPE Security Fortify Real-Time Analyzer（HPE Security Fortify 实时分析器）安装配置为防范此攻击。 
+如果您的程序中具有易受攻击的方法调用，可以使用  Double 来避免遭受这种攻击。但这种方法无法保证能够消除此问题。对于类似  BigInteger 的其他数字类，可使用  parseDouble() 方法实现这些类。  
