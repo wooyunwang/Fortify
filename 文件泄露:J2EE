@@ -1,0 +1,11 @@
+ 请不要要使用不可信赖的数据请求服务器端资源。而应使用介于位置与路径之间的间接方法。 
+请不要使用： 
+ <pre>
+&lt;a href=&quot;http://www.yourcorp.com/webApp/logic?nextPage=WEB-INF/signup.jsp&quot;&gt;New Customer
+</pre> 
+而应使用： 
+ <pre>
+&lt;a href=&quot;http://www.yourcorp.com/webApp/logic?nextPage=newCustomer&quot;&gt;New Customer
+</pre> 
+服务器端逻辑应具有逻辑名称与服务器端路径的映射（以逻辑名称为键），在上例中，键 &quot;newCustomer&quot;
+ 中存储的路径应为 &quot;/WEB-INF/signup.jsp&quot;。 
