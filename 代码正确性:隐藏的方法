@@ -1,0 +1,41 @@
+ 如果可能，为静态方法分配的签名应尽量有别于超类中的签名，以避免产生混淆。理想情况下，应尽量将该代码修改得更明确一些，例如，将这些方法放入单独的  final 类中（不会为这些类创建子类），或者创建构造函数  private，以防止针对类的实例而非类来调用静态方法。 
+ <b>示例 2：</b>以下示例对代码进行了修改，以显示更明确的权限，并使用最小特权准则来确保出现故障时的安全性。  
+ <pre>
+class AccessLevel{
+  public static final int ROOT = 0;
+  ...
+  public static final int NONE = 9;
+}
+...
+class User {
+  protected int access;
+  public User(){
+    access = AccessLevel.NONE;
+    ...
+  }
+  public int getAccessLevel(){
+    return access;
+  }
+  ...
+}
+final class RegularUser extends User {
+  ...
+}
+final class AdminUser extends User {
+  public AdminUser(){
+    access = AccessLevel.ROOT;
+  }
+}
+...
+class SecureArea {
+  ...
+  public void doRestrictedOperation(User user){
+    if (user.getAccessLevel() == AccessLevel.ROOT){
+      //do operation
+      ...
+    }else{
+      throw new PermissionNotAllowedException();
+    }
+  }
+}
+</pre>  
