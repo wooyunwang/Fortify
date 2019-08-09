@@ -1,0 +1,9 @@
+ 不要使用黑名单，应使用白名单。指定一个授权策略，仅列出允许进行的操作，拒绝所有其他操作。不要在安全限制中指定 HTTP 方法。这将确保您的安全限制都能够应用于所有 HTTP 动词。例如，以下配置将安全限制应用于所有 HTTP 命令： 
+ <pre>
+        Admin Constraint
+            Admin Area
+            /pages/index.jsp
+            /admin/*.do
+            only admin
+            admin
+</pre>  
