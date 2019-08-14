@@ -1,0 +1,33 @@
+ 1. 请不要依赖  finalize() 回收资源。为了使对象的  finalize() 方法能被调用，垃圾收集器必须确认对象符合垃圾回收的条件。但是垃圾收集器只有在 JVM 内存过小时才会使用。因此，无法保证何时能够调用该对象的  finalize() 方法。垃圾收集器最终运行时，可能出现这样的情况，即在短时间内回收大量的资源，这种情况会导致“突发”性能，并降低总体系统通过量。随着系统负载的增加，这种影响会越来越明显。 
+最后，如果某一资源回收操作被挂起（例如该操作需要通过网络访问数据库），那么执行  finalize() 方法的线程也将被挂起。 
+2. 在  finally 代码段中释放资源。示例中的代码可按以下方式改写： 
+ <pre>
+public void processFile(String fName) throws FileNotFoundException, IOException {
+  FileInputStream fis;
+  try {
+    fis = new FileInputStream(fName);
+    int sz;
+    byte[] byteArray = new byte[BLOCK_SIZE];
+    while ((sz = fis.read(byteArray)) != -1) {
+      processBytes(byteArray, sz);
+    }
+  }
+  finally {
+    if (fis != null) {
+      safeClose(fis);
+    }
+  }
+}
+
+public static void safeClose(FileInputStream fis) {
+  if (fis != null) {
+    try {
+      fis.close();
+    } catch (IOException e) {
+      log(e);
+    }
+  }
+}
+</pre> 
+以上方案使用了一个助手函数，用以记录在尝试关闭流时可能发生的异常。该助手函数大约会在需要关闭流时重新使用。 
+同样， processFile 方法不会将  fis 对象初始化为 null。而是进行检查，以确保调用  safeClose() 之前， fis 不是  null。如果没有检查  null，Java 编译器会报告  fis 可能没有进行初始化。编译器做出这一判断源于 Java 可以检测未初始化的变量。如果用一种更加复杂的方法将  fis 初始化为  null，那么编译器就无法检测  fis 未经初始化便使用的情况。  
