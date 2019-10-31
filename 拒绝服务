@@ -1,0 +1,31 @@
+ 校验用户输入以确保它不会引起不适当的资源利用。 
+ <b>例 3：</b>以下代码允许用户指定线程进入休眠的时间，如例 1 所述，但仅当数值在合理的范围之内时才会有效。 
+ <pre>
+  int usrSleepTime = Integer.parseInt(usrInput);
+  if (usrSleepTime &gt;= SLEEP_MIN &amp;&amp;
+      usrSleepTime &lt;= SLEEP_MAX) {
+    Thread.sleep(usrSleepTime);
+  } else {
+    throw new Exception(&quot;Invalid sleep duration&quot;);
+  }
+}
+</pre> 
+ <b>例 4：</b>以下代码从一个 zip 文件中读取字符串，如例 2 所述，但它读取的最大字符串长度为  MAX_STR_LEN 字符。 
+ <pre>
+  InputStream zipInput = zipFile.getInputStream(zipEntry);
+  Reader zipReader = new InputStreamReader(zipInput);
+  BufferedReader br = new BufferedReader(zipReader);
+  StringBuffer sb = new StringBuffer();
+  int intC;
+  while ((intC = br.read()) != -1) {
+    char c = (char) intC;
+    if (c == '\n') {
+      break;
+    }
+    if (sb.length() &gt;= MAX_STR_LEN) {
+      throw new Exception(&quot;input too long&quot;);
+    }
+    sb.append(c);
+  }
+  String line = sb.toString();
+</pre>  
