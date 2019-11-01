@@ -1,0 +1,27 @@
+ 为了防止出现此问题，请始终确保指定默认区域设置，或者指定可以接受这些字符（如  toUpperCase()）并带有 API 的区域设置。  
+ <b>示例 2:</b>以下示例通过手动方式将区域设置指定为  toUpperCase() 的参数。 
+ <pre>
+import java.util.Locale;
+  ...
+  public String tagProcessor(String tag){
+    if (tag.toUpperCase(Locale.ENGLISH).equals(&quot;SCRIPT&quot;)){
+      return null;
+    }
+    //does not contain SCRIPT tag, keep processing input
+    ...
+  }
+  ...
+</pre> 
+ <b>示例 3：</b>以下示例使用了函数  java.lang.String.equalsIgnoreCase() API 以防止出现此问题。 
+ <pre>
+  ...
+  public String tagProcessor(String tag){
+    if (tag.equalsIgnoreCase(&quot;SCRIPT&quot;)){
+      return null;
+    }
+    //does not contain SCRIPT tag, keep processing input
+    ...
+  }
+  ...
+</pre> 
+因为  equalsIgnoreCase() 会更改与  Character.toLowerCase() 和  Character.toUpperCase() 类似的内容，所以可以防止此问题。这涉及到使用来自  UnicodeData 文件（由 Unicode 联盟维护的 Unicode 字符数据库的一部分）的信息创建这两种字符串的临时标准格式。即使这可能会导致这些字符在被读取时以不可读的方式呈现出来，但却能够在独立于区域设置的情况下进行比较。  
