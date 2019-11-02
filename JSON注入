@@ -1,0 +1,21 @@
+ 将用户提供的数据写入 JSON 时，应该遵守以下准则： 
+1. 不要创建名称来自用户输入的 JSON 属性。 
+2. 确保使用安全的序列化函数（能够以单引号或双引号分隔不可信赖的数据，并且避免任何特殊字符）执行对 JSON 的所有序列化操作。  
+ <b>例 2：</b>以下 PHP 代码实施了与例 1 相同的功能，但使用了  json_encode() 代替字符串串联来对数据执行序列化操作，因此可以确保适当地分隔和避免任何不可信赖的数据： 
+ <pre>
+...
+
+$username = $_GET['username'];
+$password = $_GET['password'];
+
+$user_info_array = array('role' =&gt;
+ 'default', 'username' =&gt;
+ $username, 'password' =&gt;
+ $password);
+
+$user_info_json_string = json_encode($user_info_array);
+
+$user_info_json_file = fopen('~/user_info.json', 'w');
+fwrite($user_info_json_file, $user_info_json_string);
+fclose($user_info_json_file);
+</pre>  
