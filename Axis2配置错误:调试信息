@@ -1,0 +1,1 @@
+ 从配置文件中删除对 SOAP Monitor 的引用，便可禁用 SOAP Monitor。具体来说，应确保  web.xml 不包含 servlet 或 servlet 到 SOAP Monitor 服务的映射。另外，还应确保  axis2.xml 中没有类似 的引用  
