@@ -1,0 +1,12 @@
+ 将任意执行多个功能的 Servlet 的功能分解成单独的 Servlet，每个都包含自己的 URL 映射和单独的功能。这对执行特权操作或敏感操作的 Servlet 尤其重要，因为这可以减少访问该功能的路径数。 
+ <b>例 2：</b>在以下示例中，一个 URL 模式映射至单个 Servlet。 
+ <pre>
+  <servlet>   
+ MyServlet   
+ com.class.MyServlet   
+ 1   
+  </servlet>
+    MyServlet
+    /myservlet
+
+</pre>  
