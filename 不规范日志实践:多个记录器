@@ -1,0 +1,14 @@
+ 使用不同的日志级别来区分不同类型的日志条目，而不是使用 multiple loggers。 
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+public class MyClass {
+  private final static Logger logger =    
+            Logger.getLogger(MyClass.class);
+  ...
+    logger.info(&quot;informative message here&quot;);
+    ...
+    logger.error(&quot;major problem at this point&quot;);
+    ...
+    logger.fatal(&quot;game over&quot;);
+}
+</pre>  
