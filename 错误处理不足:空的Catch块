@@ -1,0 +1,10 @@
+ 至少，应该记录抛出异常的事实，以便于稍后查询及预知对程序运行所造成的影响。然而最好是中止当前操作。如果忽略某个异常的原因是因为调用者无法正确处理该异常，而程序上下文使调用者不便或不可能声明程序会抛出这一异常，那么可以考虑抛出  RuntimeException 或  Error 异常，两者均是未检查的异常。在 JDK 1.4 中， RuntimeException 有一个构造函数，可以方便地用来封装另其他异常。  
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+try {
+  doExchange();
+}
+catch (RareException e) {
+  throw RuntimeException(&quot;This can never happen&quot;, e);
+}
+</pre>  
