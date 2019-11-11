@@ -1,0 +1,17 @@
+ 始终从加密的外部资源读取存储的密码值，并为密码变量指定有意义的值。确保始终不使用 empty password 或 null password 保护敏感资源。 
+对于 Android 以及其他任何使用 SQLite 数据库的平台来说，SQLCipher 是一个好选择 -- 对 SQLite 数据库的扩展为数据库文件提供了透明的 256 位 AES 加密。因此，凭证可以存储在加密的数据库中。 
+ <b>例 4：</b>以下代码演示了在将所需的二进制码和存储凭证下载到数据库文件后，将 SQLCipher 集成到 Android 应用程序中的方法。 
+ <pre>
+import net.sqlcipher.database.SQLiteDatabase;
+...
+  SQLiteDatabase.loadLibs(this);
+  File dbFile = getDatabasePath(&quot;credentials.db&quot;);
+  dbFile.mkdirs();
+  dbFile.delete();
+  SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile, &quot;credentials&quot;, null);
+  db.execSQL(&quot;create table credentials(u, p)&quot;);
+  db.execSQL(&quot;insert into credentials(u, p) values(?, ?)&quot;, new Object[]{username, password});
+...
+</pre> 
+注意，对  android.database.sqlite.SQLiteDatabase 的引用可以使用  net.sqlcipher.database.SQLiteDatabase 代替。 
+要在 WebView 存储上启用加密，需要使用  sqlcipher.so 库重新编译 WebKit。  
