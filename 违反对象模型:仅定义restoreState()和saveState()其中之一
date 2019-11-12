@@ -1,0 +1,15 @@
+FindBugs 文档推荐了以下 hashCode() 的简单的“starter”实现方法 [1]。这个方法效率极低，但是会产生正确的结果。如果您不相信 hashCode() 对程序的重要性，请考虑使用这种实现方法。
+
+例 2： 例 1 中的代码应该用以下方式重写：
+
+
+public class halfway() {
+  public boolean equals(Object obj) {
+    ...
+  }
+
+public int hashCode() {
+    assert false : "hashCode not designed";
+    return 42; // any arbitrary constant will do 
+  }
+} 
