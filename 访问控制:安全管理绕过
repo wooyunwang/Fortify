@@ -1,0 +1,2 @@
+ 确保这些敏感的 API 无法通过不可信认的代码进行访问，并且无法在不可信认的代码上进行调用。此外，不得将此方法返回的对象传播回不可信认的代码。 
+有关此漏洞的更多详细信息，请参见“Secure Coding Guidelines for the Java Programming Language”中的准则 9。   
