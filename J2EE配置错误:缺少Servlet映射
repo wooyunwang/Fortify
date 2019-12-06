@@ -1,0 +1,17 @@
+ 确保每个 都有相应的 。 
+ <b>例 2：</b>  web.xml 中的以下条目定义了  ExampleServlet 及相应的 servlet 映射。 
+ <pre>
+br/&gt;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;
+    version=&quot;2.4&quot;&gt;
+      <servlet>   
+ ExampleServlet   
+ com.class.ExampleServlet   
+ 1   
+  </servlet>
+        ExampleServlet
+        /exampleservlet
+        action
+        /action
+</pre>  
