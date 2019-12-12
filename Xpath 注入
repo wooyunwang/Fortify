@@ -1,0 +1,61 @@
+XPath注入，XPath中存在用户输入的字符串。
+<b>修复建议</b>
+去除用户数据中的特殊字符。
+<b>修复示例</b>
+如：
+<pre>
+	public int risk(HttpServletRequest request, Document doc, 
+XPath xpath ,org.apache.log4j.Logger logger) {
+		int len = 0;
+		String path = request.getParameter("path");
+		try {
+			XPathExpression expr = xpath.compile(path);
+			Object result = expr.evaluate(doc, XPathConstants.NODESET);
+			NodeList nodes = (NodeList) result;
+			len = nodes.getLength();
+		} catch (XPathExpressionException e) {
+			logger.warn(“Exception”, e);
+		}
+		return len;
+	}
+</pre>
+修复为：
+<pre>
+	public int fix(HttpServletRequest request, 
+Document doc, XPath xpath ,org.apache.log4j.Logger logger) {
+		int len = 0;
+		String path = request.getParameter("path");
+		try {
+			String filtedXPath = filterForXPath(path);
+			XPathExpression expr = xpath.compile(filtedXPath);
+			Object result = expr.evaluate(doc, XPathConstants.NODESET);
+			NodeList nodes = (NodeList) result;
+			len = nodes.getLength();
+		} catch (XPathExpressionException e) {
+			logger.warn(“Exception”, e);
+		}
+		return len;
+	}
+	// 去除XPath语法控制字符
+	public String filterForXPath(String input) {
+		if (input == null) {
+			return null;
+		}
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < input.length(); i++) {
+			char c = input.charAt(i);
+			if (c >= 'A' && c <= 'Z') {
+				out.append(c);
+			} else if (c >= 'a' && c <= 'z') {
+				out.append(c);
+			} else if (c >= '0' && c <= '9') {
+				out.append(c);
+			} else if (c == '_' || c == '-') {
+				out.append(c);
+			} else if (c >= 0x4e00 && c <= 0x9fa5) {
+				out.append(c);
+			}
+		}
+		return out.toString();
+	}
+</pre>
