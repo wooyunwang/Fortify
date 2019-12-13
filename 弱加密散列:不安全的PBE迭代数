@@ -1,0 +1,8 @@
+ 使用一个基于密码的密钥派生函数时，迭代计数应至少为 1,000。这将大幅增加穷尽式密码搜索的代价，而对派生各个密钥的代价不会产生显著影响。NIST SP 800-132 建议为关键密钥或非常强大的系统使用高达 10,000,000 的迭代计数。 
+ <b>例 2：</b> 以下代码使用 100,000 的迭代计数： 
+ <pre>
+...
+final int iterationCount=100000;
+PBEParameterSpec pbeps=new PBEParameterSpec(salt,iterationCount);
+...
+</pre>  
