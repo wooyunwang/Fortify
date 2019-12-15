@@ -1,0 +1,31 @@
+ 很多情况下，要修复这一问题，最简单的方法是让这个违反规则的对象实现  Serializable 接口。  
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+public class DataGlob implements java.io.Serializable {
+   String globName;
+   String globValue;
+
+   public void addToSession(HttpSession session) {
+     session.setAttribute(&quot;glob&quot;, this);
+   }
+}
+</pre> 
+注意，对复杂的对象来说，存储在会话中的对象，其传递闭包必须是可序列化的。如果对象 A 引用对象 B，且对象 A 存储在会话中，那么 A 和 B 都必须实现  Serializable 接口。 
+虽然实现  Serializable 接口通常都很简单（因为该接口不要求类定义任何方法），但是某些类型的对象实现会引发一些相关问题。应密切注意引用外部资源文件的对象。例如，数据流和 JNI 都可能会引发一些相关问题。 
+ <b>例 3：</b>使用类型检测调用可序列化对象。而不是使用： 
+ <pre>
+public static void addToSession(HttpServletRequest req,
+                     String attrib, Object obj)
+{
+  HttpSession sess = req.getSession(true);
+  sess.setAttribute(attrib, obj);
+}
+</pre> 
+采用如下方法编写： 
+ <pre>
+public static void addToSession(HttpServletRequest req,
+                     String attrib, Serializable ser) {
+  HttpSession sess = req.getSession(true);
+  sess.setAttribute(attrib, ser);
+}
+</pre>
