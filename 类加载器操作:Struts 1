@@ -1,0 +1,125 @@
+ 当前尚无可用的修补程序来阻止 ClassLoader 操控攻击，并且自 Struts 1 达到其寿终状态以来，还没有推出任何修补程序来防止 Struts 1 用户免受此攻击。 
+为了能够缓解这种情况，强烈建议安装以下 Servlet 过滤器，以保护 Struts 1 Servlet 免受 ClassLoader 操控攻击： 
+ <pre>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+import javax.servlet.Filter;
+import javax.servlet.ServletResponse;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
+public class ParamFilter implements Filter {
+
+    private Pattern pattern;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        pattern = Pattern.compile(filterConfig.getInitParameter(&quot;excludeParams&quot;), Pattern.DOTALL);
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        chain.doFilter(new ParamFilteredRequest(request, pattern), response);
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    static class ParamFilteredRequest extends HttpServletRequestWrapper {
+
+        private final String body;
+        private final Pattern pattern;
+
+        public ParamFilteredRequest(ServletRequest request, Pattern pattern) {
+            super((HttpServletRequest)request);
+            this.pattern = pattern;
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = null;
+
+            try {
+                InputStream inputStream = request.getInputStream();
+
+                if (inputStream != null) {
+                    bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    char[] charBuffer = new char[128];
+                    int bytesRead = -1;
+
+                    while ((bytesRead = bufferedReader.read(charBuffer)) &gt;
+ 0) {
+                        stringBuilder.append(charBuffer, 0, bytesRead);
+                    }
+                } else {
+                    stringBuilder.append(&quot;&quot;);
+                }
+            } catch (IOException ex) {
+               // Add logger here
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException ex) {
+                       // Add logger here
+                    }
+                }
+            }
+            body = stringBuilder.toString();
+
+        }
+
+        @Override
+        public Enumeration getParameterNames() {
+            List requestParameterNames = Collections.list((Enumeration) super.getParameterNames());
+            List finalParameterNames = new ArrayList();
+
+            for (String parameterName:requestParameterNames) {
+                if (!pattern.matcher(parameterName).matches()) {
+                    finalParameterNames.add(parameterName);
+                }
+            }
+            return Collections.enumeration(finalParameterNames);
+        }
+
+        @Override
+        public ServletInputStream getInputStream() throws IOException {
+            System.out.println(body);
+            final ByteArrayInputStream byteArrayInputStream;
+            if (pattern.matcher(body).matches()) {
+                byteArrayInputStream = new ByteArrayInputStream(&quot;&quot;.getBytes());
+            } else {
+                byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+            }
+            return new ServletInputStream() {
+                public int read() throws IOException {
+                    return byteArrayInputStream.read();
+                }
+            };
+        }
+    }
+}
+</pre> 
+要安装该过滤器，请添加一个指向您的  ParamFilter 过滤器的过滤器定义以及一个过滤器映射，以阻截对 Struts Servlet 的调用。您的  web.xml 应该如下所示： 
+ <pre>
+
+    ParamFilter
+    com.company.filters.ParamFilter
+        excludeParams
+        (.*\.|^|.*|\[('|&quot;))(c|C)lass(\.|('|&quot;)]|\[).*
+    ParamFilter
+    YOUR ACTION SERVLET
+
+</pre>  
