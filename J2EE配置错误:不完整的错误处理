@@ -1,0 +1,11 @@
+ Web 应用程序必须配置有默认的错误页面。您的  web.xml 文件中应当至少包含以下条目： 
+ <pre>
+
+   java.lang.Throwable
+/error.jsp
+   404
+/error.jsp
+   500
+/error.jsp
+
+</pre>  
