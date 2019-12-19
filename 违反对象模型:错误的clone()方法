@@ -1,0 +1,16 @@
+务必通过调用  super.clone() 来获取新对象。通过 java.lang.Object 实现  clone()，会总返回类型正确的对象。 
+ 例 2： 例 1 中的代码应该用以下方式重写： 
+public class Kibitzer implements Cloneable {
+  public Object clone() throws CloneNotSupportedException {
+    Object returnMe = super.clone();
+    ...
+  }
+}
+public class FancyKibitzer extends Kibitzer
+                           implements Cloneable {
+  public Object clone() throws CloneNotSupportedException {
+    Object returnMe = super.clone();
+    ...
+  }
+}
+ 
