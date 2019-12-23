@@ -1,0 +1,13 @@
+ 使用数组的  Object.equals() 可验证两个数组对象是否指向相同的地址，但这种用例很少。如果要尝试验证两个数组包含相同元素且其元素顺序相同，应使用  java.util.Arrays.equals()。 
+ <b>示例 2：</b>以下示例使用  java.util.Arrays.equals() 修复示例 1 的问题。 
+ <pre>
+import java.util.Arrays;
+...
+  int[] arr1 = new int[10];
+  int[] arr2 = new int[10];
+  ...
+  if (Arrays.equals(arr1, arr2)){
+    //treat arrays as if identical elements
+  }
+...
+</pre>  
