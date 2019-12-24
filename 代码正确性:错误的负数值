@@ -1,0 +1,5 @@
+采用 equals() 方法比较字符串。
+例2：例1中的代码应该用以下方式重写：
+if (STRING_CONSTANT.equals(args[0])) {
+ logger.info("could happen");
+}
