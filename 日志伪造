@@ -1,0 +1,30 @@
+日志伪造，程序输出的日志文件中存在用户输入的字符串，造成日志条目截断等攻击。
+<b>修复建议</b>
+所有写入日志条目必须去除\r和\n字符。
+<b>修复示例</b>
+如：
+<pre>
+public void risk(HttpServletRequest request, HttpServletResponse response) {
+		String val = request.getParameter(""val"");;
+		try {
+			int value = Integer.parseInt(val);
+		}
+		catch (NumberFormatException nfe) {
+			log.info(""Failed to parse val = "" + val);
+		}
+	}
+</pre>
+修复为：
+<pre>
+public void risk(HttpServletRequest request, HttpServletResponse response) {
+		String val = request.getParameter(""val"");;
+		try {
+			int value = Integer.parseInt(val);
+		}
+		catch (NumberFormatException nfe) {
+			val = val.replace("\r", "");
+			val = val.replace("\n", "");
+			log.info(""Failed to parse val = "" + val);
+		}
+	}
+</pre>
