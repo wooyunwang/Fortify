@@ -1,0 +1,17 @@
+隐私侵犯，当用户隐私信息（如登录密码）被写到Log中时，会造成了隐私泄露。
+<b>修复建议</b>
+不要记录用户密码等隐私信息到日志中。
+<b>修复示例</b>
+如：
+<pre>
+	pass = getPassword();
+	...
+	dbmsLog.println(id+”:”+pass+”:”+type+”:”+tstamp); 
+</pre>
+修复为：
+<pre>
+	// dbmsLog.println中的密码字段不输出
+	pass = getPassword();
+	...
+	dbmsLog.println(id+":" + ":" + type + ":" + tstamp); 
+</pre>
