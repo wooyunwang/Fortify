@@ -1,0 +1,70 @@
+HTTP响应折断，HTTP响应报头中存在用户输入的字符串，造成HTTP响应截断等攻击。
+<b>修复建议</b>
+1、	在操作HTTP响应报头（即Head部分）时，所有写入该区域的值必须去除\r和\n字符。
+2、	创建一份安全字符白名单或正则表达式，只接受完全由这些受认可的字符组成的输入出现在HTTP响应头文件中，例如HTTP头部只允许传入字母和数字。
+<b>修复示例</b>
+如：
+<pre>
+	public void risk(HttpServletRequest request, HttpServletResponse response) {
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		response.setHeader(key, value);
+	}
+</pre>
+修复为：
+<pre>
+	public void fix(HttpServletRequest request, HttpServletResponse response) {
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		key = key.replace("\r", "");
+		key = key.replace("\n", "");
+		value = value.replace("\r", "");
+		value = value.replace("\n", "");
+		response.setHeader(key, value);
+	}
+</pre>
+或：
+<pre>
+	public void fix(HttpServletRequest request, HttpServletResponse response) {
+		String key = request.getParameter("key");
+		String value = request.getParameter("value");
+		if (Pattern.matches("[0-9A-Za-z]+", key) && Pattern.matches("[0-9A-Za-z]+", value)) {
+			response.setHeader(key, value);
+		}
+}
+</pre>
+
+存储型HTTP响应折断，HTTP报头中存在从数据库直接获取的字符串。
+<b>修复建议</b>
+在操作HTTP报头（即Head部分）时，所有写入该区域的值必须去除\r和\n字符。
+<b>修复示例</b>
+如：
+<pre>
+	public void risk(ResultSet resultSet, HttpServletResponse response,
+org.apache.log4j.Logger logger) {
+		try {
+			String key = resultSet.getString("key");
+			String value = resultSet.getString("value");
+			response.setHeader(key, value);
+		} catch (SQLException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
+修复为：
+<pre>
+	public void fix(ResultSet resultSet, HttpServletResponse response,
+org.apache.log4j.Logger logger) {
+		try {
+			String key = resultSet.getString("key");
+			String value = resultSet.getString("value");
+			key = key.replace("\r", "");
+			key = key.replace("\n", "");
+			value = value.replace(“\r”, "");
+			value = value.replace("\n", "");
+			response.setHeader(key, value);
+		} catch (SQLException e) {
+			logger.warn(“Exception”, e);
+		}
+	}
+</pre>
