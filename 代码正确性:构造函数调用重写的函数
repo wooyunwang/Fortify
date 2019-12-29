@@ -1,0 +1,21 @@
+ 构造函数不应调用可覆盖的函数，无论是通过将该函数指定为  final，还是将该类指定为  final 的方式。或者，如果此代码仅在构造函数中才需要，则可使用访问说明符  private，或直接将逻辑放在子类的构造函数中。 
+ <b>示例 2：</b>以下示例创建了类  final，以防止该函数在其他位置被覆盖。 
+ <pre>
+  ...
+  final class User {
+    private String username;
+    private boolean valid;
+    public User(String username, String password){
+      this.username = username;
+      this.valid = validateUser(username, password);
+    }
+    private boolean validateUser(String username, String password){
+      //validate user is real and can authenticate
+      ...
+    }
+    public final boolean isValid(){
+      return valid;
+    }
+  }
+</pre> 
+此示例将该类指定为  final，以便无法为其创建子类，由于此应用程序的其他位置也需要  validateUser() 函数，所以已将其更改为  private。这是通过防御的方式进行编程，因为未来可能需要为  User 类创建子类，如果未将  validateUser() 函数设置为  private，则会导致此漏洞再次出现。  
