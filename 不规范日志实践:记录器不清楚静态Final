@@ -1,0 +1,6 @@
+ 声明记录器是固定且最终的。 
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+private final static Logger logger =    
+            Logger.getLogger(MyClass.class);
+</pre>  
