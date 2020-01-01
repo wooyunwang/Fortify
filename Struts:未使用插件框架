@@ -1,0 +1,9 @@
+ 在您的 Struts 配置文件中启用 Struts Validator。以下示例说明了一种典型设置： 
+ <pre>
+
+  br/&gt;
+        value=&quot;/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml&quot;/&gt;
+
+</pre> 
+配置文件  validator-rules.xml 包含了对验证函数（称为验证器）的定义。配置文件  validation.xml 中定义了每个表单和每个表单字段所使用的验证器。 
+所有操作映射所使用的表单都必须真实存在，并且对所有表单参数都应进行验证。  
