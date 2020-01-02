@@ -1,0 +1,10 @@
+ 重新命名方法或字段。如果从方法中可以返回该字段，考虑按以下标准 getter/setter 命名原则对其进行命名： 
+ <b>例 2：</b> 例 1 中的代码应该用以下方式重写： 
+ <pre>
+public class Totaller {
+  private int total;
+  public int getTotal() {
+    ...
+  }
+}
+</pre>  
