@@ -1,0 +1,48 @@
+为了避免批量分配漏洞，控制 HTTP 请求对类绑定过程进行建模非常重要。根据所使用的框架，可以采用不同的备选方案：
+
+体系结构：定义要绑定到用户数据并且仅包含应向最终用户公开的属性的专用 DTO 类。使用与应用程序一起使用的域对象映射其属性。这些域对象将包含接收已验证用户数据的属性以及绝不能向用户控件公开的额外属性。
+
+绑定器配置：某些框架（如 Spring）允许开发人员将模型绑定器配置为根据参数名称接受或拒绝 HTTP 请求参数。例如：
+
+例 2： 
+
+
+@Override
+protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+    binder.setDisallowedFields(new String[]{"details.role", "details.age", "is_admin"});
+}
+
+
+模型类配置：根据已使用的框架和正在使用的序列化/反序列化库，可以对要绑定到 HTTP 请求参数的模型类添加注释，以允许或禁止某些属性绑定。例如，如果采用 JSON 格式发送用户数据，并且使用 Jackson 库对该数据进行反序列化，则 @JsonIgnore 注释可用于告诉 Jackson 忽略给定属性，以实现序列化或反序列化。
+
+例 3： 
+
+
+public class User {
+
+    @JsonIgnore
+    private String role;
+    private String name;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+
+在其他框架（如 Apache Struts 1 和 2）中，框架仅允许将 HTTP 请求参数绑定到具有公共 setter 的类成员。如果不应公开给定属性，则 setter 应声明为私有。
+
+例 4： 
+
+
+private String role;
+private void setRole(String role)  {
+   this.role = role;
+}
