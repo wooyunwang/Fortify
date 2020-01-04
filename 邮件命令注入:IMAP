@@ -1,0 +1,43 @@
+邮件命令行注入，用户输入的字符串被直接作为IMAP邮件服务器的命令在命令行执行。通过执行IMAP命令，攻击者能够指示服务器执行恶意操作，例如发送垃圾邮件。
+<b>修复建议</b>
+使用封装类或白名单枚举限制可被执行的命令，发送邮件时确保外界传入的参数中不包含换行符。
+<b>修复示例</b>
+如：
+<pre>
+  ...
+  final String foldername = request.getParameter("folder");
+  IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
+  ...
+  folder.doCommand(new IMAPFolder.ProtocolCommand() {
+      @Override
+      public Object doCommand(IMAPProtocol imapProtocol) throws ProtocolException {
+          try {
+              imapProtocol.simpleCommand("CREATE " + foldername, null);
+          } catch (Exception e) {
+              // Handle Exception
+          }
+          return null;
+      }
+  });
+  ...
+  </pre>
+修复为：
+<pre>
+  ...
+  final String foldername = request.getParameter("folder");
+  IMAPFolder folder = (IMAPFolder) store.getFolder("INBOX");
+  ...
+  folder.doCommand(new IMAPFolder.ProtocolCommand() {
+      @Override
+      public Object doCommand(IMAPProtocol imapProtocol) throws ProtocolException {
+          try {
+		foldername = foldername.replaceAll(“\n”, “”);
+              imapProtocol.simpleCommand("CREATE " + foldername, null);
+          } catch (Exception e) {
+              // Handle Exception
+          }
+          return null;
+      }
+  });
+  ...
+  </pre>
