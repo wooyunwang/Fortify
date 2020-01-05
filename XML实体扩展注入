@@ -1,0 +1,27 @@
+XML外部实体注入，利用能够在处理时动态构建文档的XML功能。XML实体可动态包含来自给定资源或用户提交的外部URI数据。这一行为会将应用程序暴露给 XML External Entity (XXE) 攻击，从而用于拒绝本地系统的服务，获取对本地计算机上文件未经授权的访问权限，扫描远程计算机，并拒绝远程系统的服务。
+<b>修复建议</b>
+1、	对XML unmarshaller进行安全配置，使它不允许将外部实体包含在传入的XML文档中。
+2、	使用安全配置的解析器解析文档并使用将安全解析器作为XML源的unmarshal方法。
+<b>修复示例</b>
+如：
+<pre>
+//攻击者可提交以下XML，如果 XML 解析器尝试使用 /dev/random 文件中的内容来替代实体，则此示例会使服务器（使用 UNIX 系统）崩溃。
+	&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+	&lt;!DOCTYPE foo [
+	&lt;!ELEMENT foo ANY &gt;
+	&lt;!ENTITY xxe SYSTEM &quot;file:///dev/random&quot; &gt;]&gt;&lt;foo&gt;&amp;xxe;&lt;/foo&gt;
+//未对解析器进行安全解析配置。
+	private Document risk(HttpServletRequest request) {
+		SAXReader reader = new SAXReader();
+		return reader.read(request.getInputStream());
+	}
+</pre>
+修复为：
+<pre>
+//使用安全的解析配置方式
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	dbf.setExpandEntityReferences(false);
+	DocumentBuilder db = dbf.newDocumentBuilder();
+	Document document = db.parse();
+	Model model = (Model) u.unmarshal(document); 
+</pre>
