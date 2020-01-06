@@ -1,0 +1,26 @@
+密码硬编码，任何有该代码权限的人都能得到这个密码。一旦程序发布，将会导致无法变更密码，除非是要修补该程序。甚至会导致密码在内部开发人员中泄露。
+<b>修复建议</b>
+将密码加密后存储在配置文件中。
+<b>修复示例</b>
+如：
+<pre>
+//以下代码用 hardcoded password 来连接数据库：
+	...
+	DriverManager.getConnection(url, "scott", "tiger");
+	... 
+</pre>
+修复为：
+<pre>
+	...
+	Properties pps = new Properties();
+	try {
+		InputStream in = new BufferedInputStream (new FileInputStream(filePath));  
+		pps.load(in);
+		String username = AES.decrypt(pps.getProperty(“scott”), KEY);
+		String passwd = AES.decrypt(pps.getProperty(“tiger”), KEY);
+		DriverManager.getConnection(url, " username ", " passwd ");
+	}catch (IOException e) {
+		e.printStackTrace();
+	}
+	... 
+</pre>
