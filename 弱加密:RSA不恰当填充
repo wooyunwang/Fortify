@@ -1,0 +1,17 @@
+ 为安全使用 RSA，在执行加密时必须使用 OAEP（最优非对称加密填充模式）。 
+ <b>例 2：</b> 以下代码通过使用 OAEP 填充模式的 RSA 公钥执行加密： 
+ <pre>
+  public Cipher getRSACipher() {
+    Cipher rsa = null;
+    try {
+      rsa = javax.crypto.Cipher.getInstance(&quot;RSA/ECB/OAEPWithMD5AndMGF1Padding&quot;);
+    }
+    catch (java.security.NoSuchAlgorithmException e) {
+      log(&quot;this should never happen&quot;, e);
+    }
+    catch (javax.crypto.NoSuchPaddingException e) {
+      log(&quot;this should never happen&quot;, e);
+    }
+    return rsa;
+  }
+</pre>  
