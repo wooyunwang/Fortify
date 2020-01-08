@@ -1,0 +1,39 @@
+ 写入应用程序特定的位置，例如应用程序的 SQLite 数据库。Android 完全支持 SQLite 数据库。应用程序内的任意类都可以按名称访问您所创建的任意数据库，应用程序外的类则无法访问。 
+ <b>例 2：</b>通过创建  SQLiteOpenHelper 的子类和替代  OnCreate() 方法来创建一个新的 SQLite 数据库。 
+ <pre>
+    public class MyDbOpenHelper extends SQLiteOpenHelper {
+
+    private static final int DATABASE_VERSION = 2;
+    private static final String DICTIONARY_TABLE_NAME = &quot;dictionary&quot;;
+    private static final String DICTIONARY_TABLE_CREATE =
+                &quot;CREATE TABLE &quot;
+ + DICTIONARY_TABLE_NAME + &quot;
+ (&quot;
+ +
+                KEY_WORD + &quot;
+ TEXT, &quot;
+ +
+                KEY_DEFINITION + &quot;
+ TEXT);&quot;;
+
+    DictionaryOpenHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(DICTIONARY_TABLE_CREATE);
+    }
+}
+</pre> 
+ <b>例 3：</b>或者，写入设备的内部存储。默认情况下，保存到内部存储的文件是 Android 应用程序专用的。其他  
+应用程序和用户均无法访问它们。用户卸载该应用程序时，这些文件将随之删除。 
+在下列代码中，我们创建了一个专用文件并将其写入内部存储。我们声明了  Context.MODE_PRIVATE。  
+ MODE_PRIVATE 会创建一个文件（或替换同名文件），并使其成为您应用程序的专用文件。 
+ <pre>
+String FILENAME = &quot;hello_file&quot;;
+String string = &quot;hello world!&quot;;
+FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+fos.write(string.getBytes());
+fos.close();
+</pre>  
