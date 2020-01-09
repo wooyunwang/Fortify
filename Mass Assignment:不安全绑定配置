@@ -1,0 +1,59 @@
+当使用提供自动模型绑定功能的框架时，最佳做法是控制要绑定到模型对象的属性，这样，即使攻击者能够确定该模型或嵌套类的其他未暴露属性，他们也无法绑定 HTTP 请求参数的任意值。 
+根据所使用的框架，可以采用不同的方法控制模型绑定过程： 
+ Spring MVC：可以控制绑定过程中要使用和忽略的 HTTP 请求参数。 
+ 例 2：在使用注释的 Spring 应用程序上，可以对方法进行  @InitBinder 注释，以便框架注入对 Spring 模型绑定器的引用。Spring 模型绑定器可以配置  setAllowedFields 和  setDisallowedFields 以控制要绑定的属性： 
+final String[] DISALLOWED_FIELDS = new String[]{"details.role", "details.age", "is_admin"};
+@InitBinder
+public void initBinder(WebDataBinder binder) {
+    binder.setDisallowedFields(DISALLOWED_FIELDS);
+}
+ 例 3：扩展  BaseCommandController 的 Spring 应用程序可以替代  initBinder(HttpServletRequest request, ServletRequestDataBinder binder) 方法，以获取对 Spring 模型绑定器的引用： 
+@Override
+protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+    binder.setDisallowedFields(new String[]{"details.role", "details.age", "is_admin"});
+}
+ Apache Struts：Struts 1 和 2 仅将 HTTP 请求参数绑定到具有 公共 setter 访问器的  Actions 或  ActionForms 属性。如果某个属性不应绑定到请求，则应将其 setter 设置为 私有。 
+ 例 4：配置私有 setter 以便 Struts 框架不会自动绑定任何 HTTP 请求参数： 
+private String role;
+private void setRole(String role)  {
+   this.role = role;
+}
+ REST 框架：大多数 REST 框架不会自动将内容类型为  JSON 或  XML 的 HTTP 请求正文绑定到模型对象。根据用于  JSON 和  XML 处理的库，可以采用不同的方法控制绑定过程。以下是 JAXB (XML) 和 Jackson (JSON) 的一些示例： 
+ 例 5：使用 Oracle 的 JAXB 库从 XML 文档绑定的模型可以通过不同的注释控制绑定过程，例如  @XmlAccessorType、 @XmlAttribute、 @XmlElement 和  @XmlTransient。可以告诉绑定器默认不绑定任何属性，具体方法为：使用值为  XmlAccessType.NONE 的  @XmlAccessorType 注释对模型进行注释，然后使用  @XmlAttribute 和  @XmlElement 注释选择应绑定的字段： 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
+public class User {
+    private String role;
+    private String name;
+    @XmlAttribute
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+ 例 6：使用 FastXML 的 Jackson 库从 JSON 文档绑定的模型可以通过不同的注释控制绑定过程，例如  @JsonIgnore、 @JsonIgnoreProperties、 @JsonIgnoreType 和  @JsonInclude。可以通过对某些属性进行  @JsonIgnore 注释，告诉绑定器忽略这些属性。 
+public class User {
+    @JsonIgnore
+    private String role;
+    private String name;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+防止出现批量分配漏洞的另一方法是使用将 HTTP 请求参数绑定到 DTO 对象的分层体系结构。DTO 对象仅用于该目的，仅暴露 Web 表单或 API 合约中定义的属性，然后将这些 DTO 对象映射到域对象，在这里，可以定义剩余的私有属性。 
+ 
