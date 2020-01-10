@@ -1,0 +1,8 @@
+ 如果您希望将字段作为常数值公开，则应将该字段声明为  public static final，否则就将该字段声明为  private。 
+ <b>例 2：</b> 
+ <pre>
+public class MyClass
+{
+public static final int ERROR_CODE = 123;
+//...
+}</pre>  
