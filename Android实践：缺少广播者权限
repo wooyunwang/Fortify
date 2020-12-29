@@ -1,0 +1,8 @@
+在未指定广播者权限的情况下注册的接收者将接收来自任何广播者的消息。如果这些消息包含恶意数据或来自恶意广播者，可能会对应用程序造成危害。
+
+<b>例 1：</b>以下代码会在未指定广播者权限的情况下注册接收者。
+<pre>
+...
+context.registerReceiver(broadcastReceiver, intentFilter);
+...
+</pre>
