@@ -1,0 +1,28 @@
+Android 类加载劫持漏洞主要表现为以下两种形式：
+
+- 攻击者可以更改程序在其中搜索来加载类的目录的名称，从而指向他们有控制权的某个目录的路径：攻击者明确控制了将在其中搜索类的路径。
+
+- 攻击者可以更改用于加载类的环境：攻击者间接控制了路径名的含义。
+
+在这种情况下，我们着重关注第二种情况，即攻击者可能能够控制环境的可能性。在以下情况下会发生这种 Android 类加载劫持漏洞：
+
+在未使用绝对路径或者未验证可能被加载的类的情况下，在路径中搜索库。
+
+<b>例 1：</b>以下代码指定一个目录来加载类，但不验证哪些类可能存在于该目录中。
+
+<pre>
+...
+  DexClassLoader dexClassLoader = new DexClassLoader(myPath, optimizedDexOutputPath.getAbsolutePath(), null, getClassLoader());
+  ...
+</pre>
+
+此代码只是指定查找要解释的 DEX 文件。这意味着，如果他们对 myPath指向的环境有控制权，那么他们可以得到一个解释为可能获得系统控制权的恶意的 DEX 文件。
+
+<b>例 2：</b>以下代码指定应用程序使用 WRITE_EXTERNAL_STORAGE权限可随意读取和随意写入的输出目录。
+
+<pre>
+...
+  DexClassLoader dexClassLoader = new DexClassLoader(absolutePath, Environment.getExternalStorageDirectory(), null, getClassLoader());
+...
+</pre>
+此代码指定 Environment.getExternalStorageDirectory()的输出目录，它往往指向 Android 设备的外置 SD 卡。应用程序使用 WRITE_EXTERNAL_STORAGE权限可以随意读取和随意写入该目录，这意味着如果有攻击者获得了此权限，或者有具有此权限的恶意应用程序，他们将能够使用恶意版本替换输出的优化 DEX 文件 (ODEX)，并使用与原始应用程序一样的权限执行其代码。
